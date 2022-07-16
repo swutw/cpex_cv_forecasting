@@ -1,4 +1,4 @@
-# cpex-aw_forecasting
+# cpex-cv_forecasting
 
 Forecasting template and tools for creating daily weather forecasts for the CPEX-AW field experiment. 
 
@@ -9,6 +9,7 @@ To run the scripts in this directory, you will need to following:
     - bs4 (HTML parsing)
     - datetime (dealing with dates)
     - numpy (number stuff)
+    - Image (Create gif files)
     - os (reading existing files)
     - subprocess (executing code outside python)
     - urllib (retrieving images)
@@ -17,16 +18,11 @@ To run the scripts in this directory, you will need to following:
 4. Adobe Acrobat Reader (if creating PDF with animations).
 
 
-Google Drive document with links and resources: https://docs.google.com/document/d/1R2nMAu8Cv7o2rpxjywCmUi2MQJwEco9a5HK3cPZZKkk/edit?usp=sharing
+Google Drive document with links and resources: https://docs.google.com/document/d/1fbgHyg7smXdD6AVZyczOzl1UvFjeB5TxeZdQ1_8xoxE/edit?usp=sharing
 
-Google Drive directory for uploading forecasts: https://drive.google.com/drive/folders/17X7wae2wvQqRTcibPnCjBVleRFYAdFpC
+Google Drive slides for forecasting template: https://docs.google.com/presentation/d/1v5T9YzH2UPFGwBxoqUROgIJYlRP-EVWW/edit?usp=sharing&ouid=113115779828168659760&rtpof=true&sd=true
 
--------------------------------------------
-# Template Specifications
 
-![](supplementary/template_specifications.png)
-
-- Preview on Mac has worked well for me for both displaying and annotating PDF templates. 
 -------------------------------------------
 # Steps for automatically creating the LaTeX template
 
@@ -137,7 +133,6 @@ As you add each new link, the empty figure should be replaced with what it is be
     - If they do, then you've properly linked and saved all images with the file. Great job!
     - If they do not, go back to your original template, and re-link the missing files. Then repeat steps 7-9 until there's no more missing images.
 
-9. Once you have confirmed that the saved file is as it should be on more than just your machine, upload the entire template (size should be > 50MB) to Google Drive (https://drive.google.com/drive/folders/17X7wae2wvQqRTcibPnCjBVleRFYAdFpC), and we will move it to the online repository.
 
 
 
