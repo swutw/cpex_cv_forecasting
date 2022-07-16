@@ -245,23 +245,30 @@ if createAnimations:
           if vv=='ECMWF_mslp_pcpn':
               cmd=['cp', './figs/ECMWF_mslp_pcpn_anim_01.png', './figs/ECMWF_mslp_pcpn_anim_00.png']
               subprocess.call(cmd)
+              for dd in range(3):
+                for num in range(0,7):
+                    cmd=['cp', './figs/ECMWF_mslp_pcpn_anim_'+"{:02d}".format(num+1+dd*8)+'.png', './figs/ECMWF_mslp_pcpn_day'+str(dd)+'_anim_'+"{:02d}".format(num)+'.png']
+                    subprocess.call(cmd)
+                for num in range(4):
+                    cmd=['cp', './figs/ECMWF_mslp_pcpn_anim_'+"{:02d}".format(7+dd*8)+'.png', './figs/ECMWF_mslp_pcpn_day'+str(dd)+'_anim_'+"{:02d}".format(6+num)+'.png']
+                    subprocess.call(cmd)
           for num in range(0,8):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day0.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
           images=[]
           for num in range(0+8,8+8):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day1.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
           images=[]
           for num in range(0+16,8+16):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day2.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
@@ -274,21 +281,21 @@ if createAnimations:
           images=[]
           for num in range(0,4):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day0.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
           images=[]
           for num in range(0+4,4+4):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day1.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
           images=[]
           for num in range(0+8,4+8):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day2.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
@@ -301,22 +308,48 @@ if createAnimations:
               subprocess.call(cmd)
           for num in range(0,8):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day0.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
           images=[]
           for num in range(0+8,8+8):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day1.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
           images=[]
           for num in range(0+16,8+16):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(2):
+          for rep in range(3):
               images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
           images[0].save('./figs/'+vv+'_day2.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
+
+  if switches['UTAH_dryrun']:
+    print('Got in')
+    vv='slp_rain'
+    current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day1_anim_' in fl]
+    if len(current_fls) == 7:
+        print('... UofUtah '+ vv +' - model day 1')
+        animationSteps(saveDir, 'uutah_'+vv+'_day1_anim_', 'uutah_'+vv+'_day1_movie.gif')
+
+    current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day2_anim_' in fl]
+    if len(current_fls) == 7:
+        print('... UofUtah '+ vv +' - model day 2')
+        animationSteps(saveDir, 'uutah_'+vv+'_day2_anim_', 'uutah_'+vv+'_day2_movie.gif')
+
+
+    var=['sfcwind','rhght650','tpw_olr','PBLH']
+    for vv in var:
+      current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day1_anim_' in fl]
+      if len(current_fls) == 12:
+          print('... UofUtah '+ vv +' - model day 1')
+          animationSteps(saveDir, 'uutah_'+vv+'_day1_anim_', 'uutah_'+vv+'_day1_movie.gif')
+
+      current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day2_anim_' in fl]
+      if len(current_fls) == 12:
+          print('... UofUtah '+ vv +' - model day 2')
+          animationSteps(saveDir, 'uutah_'+vv+'_day2_anim_', 'uutah_'+vv+'_day2_movie.gif')
 
   print('Creating model output animations complete.')

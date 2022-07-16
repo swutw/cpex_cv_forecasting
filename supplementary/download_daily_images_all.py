@@ -611,6 +611,34 @@ if downloadImages:
 
     write_switch('icap_aerosol_ensemble', status, fl_switch)
 
+  if switches['UTAH_dryrun']:
+   var=['sfcwind','rhght650','tpw_olr','PBLH','slp_rain']
+   for vv in var:
+    if vv == 'PBLH' or vv == 'slp_rain':
+        dd = 'd02'
+    else:
+        dd = 'd01'
+    print("... Downloading UofUtah model "+ vv + " map - animation")
+    if vv == 'slp_rain':
+      for frame in range(7):
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day1+timedelta(hours=3) + timedelta(hours=3*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day1_anim_' + '{:02d}'.format(frame) + '.png')
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day2+timedelta(hours=3) + timedelta(hours=3*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day2_anim_' + '{:02d}'.format(frame) + '.png')
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+    else:
+      for frame in range(nFrames_uwincm):
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day1_anim_' + '{:02d}'.format(frame) + '.png')
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day2_anim_' + '{:02d}'.format(frame) + '.png')
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+   write_switch('UTAH_dryrun', status, fl_switch)
+
   if switches['ECMWF_prediction']:
     ECMWF_files=[]
     for num in range(57): #57
@@ -678,7 +706,6 @@ if downloadImages:
         count_bad_links += (1 - dl)
         status.append(dl)
     write_switch('ICON_prediction', status, fl_switch)
-
 
 
   if switches['nasa_geos']:

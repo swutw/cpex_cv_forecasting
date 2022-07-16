@@ -201,3 +201,15 @@ GEOS_700mb_outlook_anim_08.png
 GEOS_700mb_outlook_anim_09.png
 GEOS_700mb_outlook_anim_10.png
 GEOS_700mb_outlook_anim_11.png
+uutah_slp_rain_day1_movie.gif
+uutah_slp_rain_day2_movie.gif
+uutah_tpw_olr_day1_movie.gif
+uutah_tpw_olr_day2_movie.gif
+ECMWF_mslp_pcpn_day1_anim_00.png
+ECMWF_mslp_pcpn_day2_anim_00.png
+GFS_midRH_day0.gif
+GFS_midRH_day1.gif
+GFS_midRH_day2.gif
+ICON_mslp_pcpn_day0.gif
+ICON_mslp_pcpn_day1.gif
+ICON_mslp_pcpn_day2.gif

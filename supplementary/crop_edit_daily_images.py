@@ -164,6 +164,34 @@ if processImages:
   all_files = sorted([el for el in os.listdir(saveDir)])
   print('Processing images.')
 
+  if switches['UTAH_dryrun']:
+    print('... UTAH precipitation and ECMWF precipitation - model day 1.')
+    fls_left = sorted([el for el in os.listdir(saveDir) if 'ECMWF_mslp_pcpn_day1_anim' in el])
+    fls_right = sorted([el for el in os.listdir(saveDir) if 'uutah_slp_rain_day1_anim' in el])
+    if len(fls_left) <= len(fls_right):
+      for num, fl in enumerate(fls_left):
+        cmd = ['convert', '+append', saveDir+fl, saveDir+fls_right[num], cropDir+'UtahEcmwf_joint_precip_day1_anim_' + '{:02d}'.format(num) + '.jpg']
+        subprocess.call(cmd)
+    else:
+      print('... ... The numbers of images for fields do not match.')
+
+
+    animationSteps(cropDir, 'UtahEcmwf_joint_precip_day1_anim_', 'UtahEcmwf_joint_precip_day1_movie.gif')
+
+    print('... UTAH precipitation and ECMWF precipitation - model day 2.')
+    fls_left = sorted([el for el in os.listdir(saveDir) if 'ECMWF_mslp_pcpn_day2_anim' in el])
+    fls_right = sorted([el for el in os.listdir(saveDir) if 'uutah_slp_rain_day2_anim' in el])
+    if len(fls_left) <= len(fls_right):
+      for num, fl in enumerate(fls_left):
+        cmd = ['convert', '+append', saveDir+fl, saveDir+fls_right[num], cropDir+'UtahEcmwf_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg']
+        subprocess.call(cmd)
+    else:
+      print('... ... The numbers of images for fields do not match.')
+
+
+    animationSteps(cropDir, 'UtahEcmwf_joint_precip_day2_anim_', 'UtahEcmwf_joint_precip_day2_movie.gif')
+
+
   if switches['nhc_analysis']:
     print('... NHC analysis - cropping image and adding St.Croix and Sal locations.')
     current_files = [el for el in all_files if 'NHC_surface_analysis.png' in el]
@@ -777,24 +805,47 @@ if joinSlideAnimations:
 
       animationSteps(cropDir, 'uwincm_joint_precip_day2_anim_', 'uwincm_joint_precip_day2_movie.gif')
 
-  moving_files=[      'ECMWF_mslp_pcpn_day0.gif',
-                      'ECMWF_mslp_pcpn_day1.gif',
+    if switch['UTAH_dryrun']:
+      print('... UTAH precipitation and ECMWF precipitation - model day 1.')
+      fls_left = sorted([el for el in os.listdir(saveDir) if 'uutah_slp_rain_day1_anim' in el])
+      fls_right = sorted([el for el in os.listdir(saveDir) if 'ECMWF_mslp_pcpn_day1_anim' in el])
+      if len(fls_left) <= len(fls_right):
+        for num, fl in enumerate(fls_left):
+          cmd = ['convert', '+append', saveDir+fl, saveDir+fls_right[num], cropDir+'UtahEcmwf_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg']
+          subprocess.call(cmd)
+      else:
+        print('... ... The numbers of images for fields do not match.')
+
+
+      animationSteps(cropDir, 'UtahEcmwf_joint_precip_day2_anim_', 'UtahEcmwf_joint_precip_day2_movie.gif')
+
+
+
+
+
+  moving_files=[      'ECMWF_mslp_pcpn_day1.gif',
                       'ECMWF_mslp_pcpn_day2.gif',
-                      'ECMWF_mslp_wind_day0.gif',
                       'ECMWF_mslp_wind_day1.gif',
                       'ECMWF_mslp_wind_day2.gif',
-                      'ECMWF_mslp_pwat_day0.gif',
                       'ECMWF_mslp_pwat_day1.gif',
                       'ECMWF_mslp_pwat_day2.gif',
-                      'ECMWF_midRH_day0.gif',
                       'ECMWF_midRH_day1.gif',
                       'ECMWF_midRH_day2.gif',
-                      'ICON_mslp_pcpn_day0.gif',
                       'ICON_mslp_pcpn_day1.gif',
                       'ICON_mslp_pcpn_day2.gif',
+                      'uutah_sfcwind_day1_movie.gif',
+                      'uutah_sfcwind_day2_movie.gif',
+                      'uutah_tpw_olr_day1_movie.gif',
+                      'uutah_tpw_olr_day2_movie.gif',
+                      'uutah_slp_rain_day1_movie.gif',
+                      'uutah_slp_rain_day2_movie.gif',
+                      'uutah_rhght650_day1_movie.gif',
+                      'uutah_rhght650_day2_movie.gif',
+                      'uutah_PBLH_day1_movie.gif',
+                      'uutah_PBLH_day2_movie.gif'
                       ]
   for ff in moving_files:
-    cmd = ['mv', saveDir+ff, cropDir+'.']
+    cmd = ['cp', saveDir+ff, cropDir+'.']
     subprocess.call(cmd)
 
   print('Creating joint animations complete.')
@@ -848,21 +899,22 @@ if moveFinalImages:
                     'ICAP_aerosol_ensemble_96.png',
                     'ICAP_aerosol_ensemble_120.png',
                     'GEOS_700mb_outlook_movie.gif',
-                    'ECMWF_mslp_pcpn_day0.gif',
                     'ECMWF_mslp_pcpn_day1.gif',
                     'ECMWF_mslp_pcpn_day2.gif',
-                    'ECMWF_mslp_wind_day0.gif',
-                    'ECMWF_mslp_wind_day1.gif',
-                    'ECMWF_mslp_wind_day2.gif',
-                    'ECMWF_mslp_pwat_day0.gif',
-                    'ECMWF_mslp_pwat_day1.gif',
-                    'ECMWF_mslp_pwat_day2.gif',
-                    'ECMWF_midRH_day0.gif',
-                    'ECMWF_midRH_day1.gif',
-                    'ECMWF_midRH_day2.gif',
-                    'ICON_mslp_pcpn_day0.gif',
                     'ICON_mslp_pcpn_day1.gif',
                     'ICON_mslp_pcpn_day2.gif',
+                    'UtahEcmwf_joint_precip_day1_movie.gif',
+                    'UtahEcmwf_joint_precip_day2_movie.gif',
+                    'uutah_sfcwind_day1_movie.gif',
+                    'uutah_sfcwind_day2_movie.gif',
+                    'uutah_tpw_olr_day1_movie.gif',
+                    'uutah_tpw_olr_day2_movie.gif',
+                    'uutah_slp_rain_day1_movie.gif',
+                    'uutah_slp_rain_day2_movie.gif',
+                    'uutah_rhght650_day1_movie.gif',
+                    'uutah_rhght650_day2_movie.gif',
+                    'uutah_PBLH_day1_movie.gif',
+                    'uutah_PBLH_day2_movie.gif'
                     ]
 
     # additional images, when they become available:
