@@ -9,12 +9,12 @@ icap_aerosol_ensemble = True
 nasa_geos = True
 nasa_geos_animation = True
 
-uwincm_650mbRH = False
-uwincm_boundaryLayer = False
-uwincm_clouds_current = False
-uwincm_clouds = False
-uwincm_precipitation = False
-uwincm_surfaceWind = False
+uwincm_650mbRH = True
+uwincm_boundaryLayer = True
+uwincm_clouds_current = True
+uwincm_clouds = True
+uwincm_precipitation = True
+uwincm_surfaceWind = True
 
 uwincm_650mbRH_animation = True
 uwincm_boundaryLayer_animation = True
@@ -23,7 +23,7 @@ uwincm_precipitation_animation = True
 uwincm_surfaceWind_animation = True
 
 uutah_precipitation = True
-uutah_precipitation_animation = False
+uutah_precipitation_animation = True
 
 ECMWF_prediction = True
 GFS_prediction = True
