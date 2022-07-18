@@ -612,6 +612,13 @@ if downloadImages:
     write_switch('icap_aerosol_ensemble', status, fl_switch)
 
   if switches['UTAH_dryrun']:
+   print("... Downloading UTAH cloud maps at forecast making time (16Z on current day).")
+   url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/tpw_olr-' + (today+timedelta(hours=16)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+   dl = downloadLink(url, saveDir + 'uutah_tpw_current.png')
+   count_good_links += dl
+   count_bad_links += (1 - dl)
+   status.append(dl)
+
    var=['sfcwind','rhght650','tpw_olr','PBLH','slp_rain']
    for vv in var:
     if vv == 'PBLH' or vv == 'slp_rain':

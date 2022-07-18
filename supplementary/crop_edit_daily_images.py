@@ -842,7 +842,8 @@ if joinSlideAnimations:
                       'uutah_rhght650_day1_movie.gif',
                       'uutah_rhght650_day2_movie.gif',
                       'uutah_PBLH_day1_movie.gif',
-                      'uutah_PBLH_day2_movie.gif'
+                      'uutah_PBLH_day2_movie.gif',
+                      'uutah_tpw_current.png''
                       ]
   for ff in moving_files:
     cmd = ['cp', saveDir+ff, cropDir+'.']
@@ -914,7 +915,8 @@ if moveFinalImages:
                     'uutah_rhght650_day1_movie.gif',
                     'uutah_rhght650_day2_movie.gif',
                     'uutah_PBLH_day1_movie.gif',
-                    'uutah_PBLH_day2_movie.gif'
+                    'uutah_PBLH_day2_movie.gif',
+                    'uutah_tpw_current.png'
                     ]
 
     # additional images, when they become available:
