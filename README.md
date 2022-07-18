@@ -1,6 +1,6 @@
 # cpex-cv_forecasting
 
-Forecasting template and tools for creating daily weather forecasts for the CPEX-AW field experiment. 
+Forecasting template and tools for creating daily weather forecasts for the CPEX-CV field experiment. 
 
 To run the scripts in this directory, you will need to following:
 
@@ -82,8 +82,8 @@ If you're running pdflatex, use the following syntax: **pdflatex --shell-escape 
 
 If a given image is not available at the time of pdf compilation, the templates will display the CPEX logo instead. For the animated template, the CPEX logo will display whenever the animation images are not complete.
 
-6. Change the file name of your final forecast (whether it be .pdf or .ppt or .pptx) to follow this example: **CPEX-AW_Forecast_YYYY-MM-DD.pdf** and save in _./forecast_files/_. 
-- e.g., on July 16, 2020, the file would be under name would be: ./forecast_files/CPEX-AW_Forecast_2020-07-16_animated.pdf
+6. Change the file name of your final forecast (whether it be .pdf or .ppt or .pptx) to follow this example: **CPEX-CV_Forecast_YYYY-MM-DD.pdf** and save in _./forecast_files/_. 
+- e.g., on July 16, 2020, the file would be under name would be: ./forecast_files/CPEX-CV_Forecast_2020-07-16_animated.pdf
 
 **Just before you are ready to present**
 7. Update the observed imagery that might have been refreshed while you were forecasting: **./run_update_observed_imagrey.sh** or **python ./supplementary/update_observed_imagrey.py**
@@ -122,8 +122,8 @@ As you add each new link, the empty figure should be replaced with what it is be
 
 6. After you are done with annotations (or ~20 min before presenting), run the script to refresh observed imagery (**./run_update_latest_imagery.sh**). This way your document will include the latest available observations.
 
-7. Copy (or Duplicate) the finished PPT file, and name it following this example: **CPEX-AW_Forecast_YYYY-MM-DD.pdf**
-- e.g., on July 16, 2020, the file would be under name would be: ./forecast_files/CPEX-AW_Forecast_2020-07-16_animated.pdf
+7. Copy (or Duplicate) the finished PPT file, and name it following this example: **CPEX-CV_Forecast_YYYY-MM-DD.pdf**
+- e.g., on July 16, 2020, the file would be under name would be: ./forecast_files/CPEX-CV_Forecast_2020-07-16_animated.pdf
 
 8. Move the final document to **./forecast_files/**.
 
