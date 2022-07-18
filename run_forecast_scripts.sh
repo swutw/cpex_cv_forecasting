@@ -84,8 +84,8 @@ if $rename_timestamp_templates; then
   echo ""
   echo ""
   echo "... Renaming template files to CPEX format."
-  cp forecast_template_still.pdf ./forecast_files/CPEX-AW_Forecast_$(date +%Y-%m-%d)_still.pdf
-  cp forecast_template_animated.pdf ./forecast_files/CPEX-AW_Forecast_$(date +%Y-%m-%d)_animated.pdf
+  cp forecast_template_still.pdf ./forecast_files/CPEX-CV_Forecast_$(date +%Y-%m-%d)_still.pdf
+  cp forecast_template_animated.pdf ./forecast_files/CPEX-CV_Forecast_$(date +%Y-%m-%d)_animated.pdf
 
 
 fi
