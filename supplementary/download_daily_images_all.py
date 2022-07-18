@@ -613,7 +613,7 @@ if downloadImages:
 
   if switches['UTAH_dryrun']:
    print("... Downloading UTAH cloud maps at forecast making time (16Z on current day).")
-   url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/tpw_olr-' + (today+timedelta(hours=16)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+   url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/tpw_olr-' + (today+timedelta(hours=16)).strftime('%Y-%m-%d_%H:%M:%S') + '_d01.png'
    dl = downloadLink(url, saveDir + 'uutah_tpw_current.png')
    count_good_links += dl
    count_bad_links += (1 - dl)
