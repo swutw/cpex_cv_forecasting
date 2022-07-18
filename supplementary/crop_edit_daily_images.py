@@ -112,15 +112,15 @@ def animationSteps(fileDir, imageNameRoot, outName):
 
 if clearDirectory:
   print('Removing existing files.')
-  existing_files = [el for el in sorted(os.listdir(cropDir)) if 'logo_cpexaw.png' not in el]
+  existing_files = [el for el in sorted(os.listdir(cropDir)) if 'logo_cpexcv.png' not in el]
   for fl in existing_files:
     os.remove(cropDir+fl)
 
-  print('Copying over CPEX-AW logo.')
+  print('Copying over CPEX-CV logo.')
   fls = os.listdir(saveDir)
-  cmd = ['cp', saveDir+'logo_cpexaw.png', cropDir+'logo_cpexaw.png']
+  cmd = ['cp', saveDir+'logo_cpexcv.png', cropDir+'logo_cpexcv.png']
   subprocess.call(cmd)
-  cmd = ['convert', cropDir+'logo_cpexaw.png', '-trim',  '-border',  '0',  '+repage', cropDir+'logo_cpexaw.png']
+  cmd = ['convert', cropDir+'logo_cpexcv.png', '-trim',  '-border',  '0',  '+repage', cropDir+'logo_cpexcv.png']
   subprocess.call(cmd)
   print('Removing existing files complete.')
 
@@ -863,7 +863,7 @@ if moveFinalImages:
   print('Moving final images and animations to ./figs_final.')
 
 
-  list_of_images = ['logo_cpexaw.png',
+  list_of_images = ['logo_cpexcv.png',
                     'NHC_surface_analysis.png',
                     'MIMIC-TPW_latest.png',
                     'uwincm_clouds_current.jpg',

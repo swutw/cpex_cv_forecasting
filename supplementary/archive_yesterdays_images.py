@@ -30,8 +30,8 @@ print("Archiving yesterday's forecast.")
 
 archive_forecast_directories = [directory for directory in sorted(os.listdir(archiveDir)) if os.path.isdir(archiveDir+directory) and 'archive-forecast' in directory]
 yesterdays_directory = 'archive-forecast_' + yesterday.strftime('%Y-%m-%d')
-  
-files_in_figs = [fl for fl in os.listdir(saveDir) if not fl.startswith('.') and 'logo_cpexaw.png' not in fl]
+
+files_in_figs = [fl for fl in os.listdir(saveDir) if not fl.startswith('.') and 'logo_cpexcv.png' not in fl]
 files_in_figs_cropped = [fl for fl in os.listdir(cropDir) if not fl.startswith('.')]
 files_in_figs_final = [fl for fl in os.listdir(finDir) if not fl.startswith('.')]
 
@@ -45,20 +45,20 @@ if yesterdays_directory in archive_forecast_directories:
     print('    ... Archive directory is empty. Will move in figures from ./figs_final/.')
     for fl in files_in_figs_final:
       os.rename(finDir+fl, archiveDir+yesterdays_directory+'/'+fl)
-    
+
     print('    ... Removing all files in ./figs./')
     for fl in files_in_figs:
       os.remove(saveDir+fl)
-    
+
     print('    ... Removing all files in ./figs_cropped/.')
     for fl in files_in_figs_cropped:
       os.remove(cropDir+fl)
-    
+
 else:
   print('... Archive directory for yesterday does not exist.')
   print('    ... Creating a new directory.')
   os.mkdir(archiveDir + yesterdays_directory)
-  
+
   print('    ... Move in figures from ./figs_final/')
   for fl in files_in_figs_final:
     os.rename(finDir+fl, archiveDir+yesterdays_directory+'/'+fl)
@@ -66,10 +66,9 @@ else:
   print('    ... Removing all files in ./figs/')
   for fl in files_in_figs:
     os.remove(saveDir+fl)
-    
+
   print('    ... Removing all files in ./figs_cropped/')
   for fl in files_in_figs_cropped:
     os.remove(cropDir+fl)
-       
-print("Archiving yesterday's forecast complete.")
 
+print("Archiving yesterday's forecast complete.")
