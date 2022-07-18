@@ -710,7 +710,6 @@ fl_switch = open(forecastDir + './supplementary/switches_process.txt', 'w')
 for sw in switch_key_list:
   fls = switch_dict[sw]
   fls_present = [fl for fl in fls if fl in present_files]
-  print(sw,fls,fls_present)
   if len(fls_present) > 0:
     status = [True]
     write_switch(sw, fl_switch)
