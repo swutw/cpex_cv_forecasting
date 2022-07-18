@@ -14,7 +14,7 @@ To run the scripts in this directory, you will need to following:
     - subprocess (executing code outside python)
     - urllib (retrieving images)
     - time
-3. LaTeX compiler (for making pdf documents) or Microsoft Powerpoint.
+3. LaTeX compiler (for making pdf documents so it won't be a necessary requirement.) or Microsoft Powerpoint.
 4. Adobe Acrobat Reader (if creating PDF with animations).
 
 
