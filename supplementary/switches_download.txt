@@ -16,11 +16,11 @@ uwincm_clouds = False
 uwincm_precipitation = False
 uwincm_surfaceWind = False
 
-uwincm_650mbRH_animation = False
-uwincm_boundaryLayer_animation = False
-uwincm_clouds_animation = False
-uwincm_precipitation_animation = False
-uwincm_surfaceWind_animation = False
+uwincm_650mbRH_animation = True
+uwincm_boundaryLayer_animation = True
+uwincm_clouds_animation = True
+uwincm_precipitation_animation = True
+uwincm_surfaceWind_animation = True
 
 uutah_precipitation = True
 uutah_precipitation_animation = False

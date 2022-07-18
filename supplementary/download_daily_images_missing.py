@@ -182,7 +182,7 @@ switch_dict = {'mimic_tpw': ['MIMIC-TPW_24h_animation.gif'],
                'uutah_precipitation_animation': ['uutah_precip_day1_anim_00.jpg', 'uutah_precip_day1_anim_01.jpg', 'uutah_precip_day1_anim_02.jpg', 'uutah_precip_day1_anim_03.jpg', 'uutah_precip_day1_anim_04.jpg', 'uutah_precip_day1_anim_05.jpg', 'uutah_precip_day1_anim_06.jpg', 'uutah_precip_day1_anim_07.jpg', 'uutah_precip_day1_anim_08.jpg', 'uutah_precip_day1_anim_09.jpg', 'uutah_precip_day1_anim_10.jpg', 'uutah_precip_day1_anim_11.jpg', 'uutah_precip_day2_anim_00.jpg', 'uutah_precip_day2_anim_01.jpg', 'uutah_precip_day2_anim_02.jpg', 'uutah_precip_day2_anim_03.jpg', 'uutah_precip_day2_anim_04.jpg', 'uutah_precip_day2_anim_05.jpg', 'uutah_precip_day2_anim_06.jpg', 'uutah_precip_day2_anim_07.jpg', 'uutah_precip_day2_anim_08.jpg', 'uutah_precip_day2_anim_09.jpg', 'uutah_precip_day2_anim_10.jpg', 'uutah_precip_day2_anim_11.jpg'],
                'icap_aerosol_ensemble': ['ICAP_aerosol_ensemble_72.png', 'ICAP_aerosol_ensemble_120.png'],
                'nasa_geos': ['GEOS_dust_aot.png', 'GEOS_dust_aot_day1.png', 'GEOS_dust_aot_day2.png', 'GEOS_dust_aot_vert_' + str(dust_xLon) + 'N.png', 'GEOS_dust_aot_day1_vert_' + str(dust_xLon) + 'N.png', 'GEOS_dust_aot_day2_vert_' + str(dust_xLon) + 'N.png', 'GEOS_dust_aot_vert_' + str(dust_xLat) + 'W.png', 'GEOS_dust_aot_day1_vert_' + str(dust_xLat) + 'W.png', 'GEOS_dust_aot_day2_vert_' + str(dust_xLat) + 'W.png', 'GEOS_700mb_outlook_anim_00.png', 'GEOS_700mb_outlook_anim_01.png', 'GEOS_700mb_outlook_anim_02.png', 'GEOS_700mb_outlook_anim_03.png', 'GEOS_700mb_outlook_anim_04.png', 'GEOS_700mb_outlook_anim_05.png', 'GEOS_700mb_outlook_anim_06.png', 'GEOS_700mb_outlook_anim_07.png', 'GEOS_700mb_outlook_anim_08.png', 'GEOS_700mb_outlook_anim_09.png', 'GEOS_700mb_outlook_anim_10.png', 'GEOS_700mb_outlook_anim_11.png'],
-               'ECMWF_prediction': ['ECMWF_mslp_pcpn_day1_anim_00.png','ECMWF_mslp_pcpn_day2_anim_00.png'],
+               'ECMWF_prediction': ['ECMWF_mslp_pcpn_anim_00.png','ECMWF_mslp_pcpn_anim_01.png'],
                'UTAH_dryrun': ['uutah_slp_rain_day1_anim_00.png','uutah_slp_rain_day2_anim_00.png','uutah_tpw_olr_day1_anim_00.png','uutah_tpw_olr_day2_anim_00.png'],
                'GFS_prediction': ['GFS_midRH_anim_00.png','GFS_midRH_anim_01.png','GFS_midRH_anim_02.png'],
                'ICON_prediction': ['ICON_mslp_wind_anim_00.png','ICON_mslp_wind_anim_01.png','ICON_mslp_wind_anim_02.png']}
@@ -710,6 +710,7 @@ fl_switch = open(forecastDir + './supplementary/switches_process.txt', 'w')
 for sw in switch_key_list:
   fls = switch_dict[sw]
   fls_present = [fl for fl in fls if fl in present_files]
+  print(sw,fls,fls_present)
   if len(fls_present) > 0:
     status = [True]
     write_switch(sw, fl_switch)
