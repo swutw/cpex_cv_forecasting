@@ -25,7 +25,7 @@ from PIL import Image
 readSwitches = True
 createAnimations = True
 
-model_day1 = model_day2 = True
+model_day1 = model_day2 = False
 
 
 
@@ -231,125 +231,16 @@ if createAnimations:
         animationSteps(saveDir, 'uutah_precip_day2_anim_', 'uutah_precip_day2_movie.gif')
 
 
-  if switches['nasa_geos']:
-    print('... NASA GEOS 700mb winds')
-    current_fls = [fl for fl in present_files_animation if 'GEOS_700mb_outlook_anim_' in fl]
-    if len(current_fls) == 12:
-      animationSteps(saveDir, 'GEOS_700mb_outlook_anim_', 'GEOS_700mb_outlook_movie.gif')
-
-
   if switches['ECMWF_prediction']:
-      var=['ECMWF_mslp_wind', 'ECMWF_midRH', 'ECMWF_mslp_pwat', 'ECMWF_mslp_pcpn']
+      var=['z700_vort','z850_vort']
       for vv in var:
           images=[]
-          if vv=='ECMWF_mslp_pcpn':
-              cmd=['cp', './figs/ECMWF_mslp_pcpn_anim_01.png', './figs/ECMWF_mslp_pcpn_anim_00.png']
-              subprocess.call(cmd)
-              for dd in range(3):
-                for num in range(0,7):
-                    cmd=['cp', './figs/ECMWF_mslp_pcpn_anim_'+"{:02d}".format(num+1+dd*8)+'.png', './figs/ECMWF_mslp_pcpn_day'+str(dd)+'_anim_'+"{:02d}".format(num)+'.png']
-                    subprocess.call(cmd)
-                for num in range(4):
-                    cmd=['cp', './figs/ECMWF_mslp_pcpn_anim_'+"{:02d}".format(7+dd*8)+'.png', './figs/ECMWF_mslp_pcpn_day'+str(dd)+'_anim_'+"{:02d}".format(6+num)+'.png']
-                    subprocess.call(cmd)
-          for num in range(0,8):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
+          for num in range(0,24):
+              images.append(Image.open('./figs/ECMWF_'+vv+'_anim_day3_'+"{:02d}".format(num)+'.png'))
           for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day0.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-          images=[]
-          for num in range(0+8,8+8):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day1.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-          images=[]
-          for num in range(0+16,8+16):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day2.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-  if switches['GFS_prediction']:
-      var=['GFS_mslp_wind', 'GFS_midRH', 'GFS_mslp_pwat', 'GFS_mslp_pcpn']
-      for vv in var:
-          if vv=='GFS_mslp_pcpn':
-              cmd=['cp', './figs/GFS_mslp_pcpn_anim_01.png', './figs/GFS_mslp_pcpn_anim_00.png']
-              subprocess.call(cmd)
-          images=[]
-          for num in range(0,4):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day0.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-          images=[]
-          for num in range(0+4,4+4):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day1.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-          images=[]
-          for num in range(0+8,4+8):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day2.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-  if switches['ICON_prediction']:
-      var=['iCON_mslp_wind', 'ICON_mslp_pcpn']
-      for vv in var:
-          images=[]
-          if vv=='ICON_mslp_pcpn':
-              cmd=['cp', './figs/ICON_mslp_pcpn_anim_01.png', './figs/ICON_mslp_pcpn_anim_00.png']
-              subprocess.call(cmd)
-          for num in range(0,8):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day0.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-          images=[]
-          for num in range(0+8,8+8):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day1.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-          images=[]
-          for num in range(0+16,8+16):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          for rep in range(3):
-              images.append(Image.open('./figs/'+vv+'_anim_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/'+vv+'_day2.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
-
-  if switches['UTAH_dryrun']:
-    print('Got in')
-    vv='slp_rain'
-    current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day1_anim_' in fl]
-    if len(current_fls) == 7:
-        print('... UofUtah '+ vv +' - model day 1')
-        animationSteps(saveDir, 'uutah_'+vv+'_day1_anim_', 'uutah_'+vv+'_day1_movie.gif')
-
-    current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day2_anim_' in fl]
-    if len(current_fls) == 7:
-        print('... UofUtah '+ vv +' - model day 2')
-        animationSteps(saveDir, 'uutah_'+vv+'_day2_anim_', 'uutah_'+vv+'_day2_movie.gif')
+              images.append(Image.open('./figs/ECMWF_'+vv+'_anim_day3_'+"{:02d}".format(num)+'.png'))
+          images[0].save('./figs/ECMWF_'+vv+'_day3.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
 
-    var=['sfcwind','rhght650','tpw_olr','PBLH']
-    for vv in var:
-      current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day1_anim_' in fl]
-      if len(current_fls) == 12:
-          print('... UofUtah '+ vv +' - model day 1')
-          animationSteps(saveDir, 'uutah_'+vv+'_day1_anim_', 'uutah_'+vv+'_day1_movie.gif')
-
-      current_fls = [fl for fl in present_files_animation if 'uutah_'+vv+'_day2_anim_' in fl]
-      if len(current_fls) == 12:
-          print('... UofUtah '+ vv +' - model day 2')
-          animationSteps(saveDir, 'uutah_'+vv+'_day2_anim_', 'uutah_'+vv+'_day2_movie.gif')
 
   print('Creating model output animations complete.')

@@ -24,6 +24,7 @@ Updates:
  - 2021-07-26: Added total AOT and cloud fraction image downloads from NASA GEOS model.
  - 2022-07-01: Major modification for the Cabo Verde forecasting
  - 2022-07-08: ECMWF, GFS, and ICON Global forecasting models
+ - 2022-08-15: ECMWF 5 days outlook
 """
 
 
@@ -44,7 +45,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 readSwitches = True
 downloadImages = True
 
-model_day1 = model_day2 = False
+model_day1 = model_day2 = True
 
 
 forecastDir = './'
@@ -54,8 +55,8 @@ finDir = './figs_final/'
 
 
 
-today = datetime.today()
-#today = datetime.strptime('2021-07-18', '%Y-%m-%d')
+#today = datetime.today()
+today = datetime.strptime('2022-08-22', '%Y-%m-%d')
 today = today.replace(hour=0, minute=0, second=0, microsecond=0)
 yesterday = today - timedelta(days=1)
 forecast_day1 = today + timedelta(days=1)
@@ -78,9 +79,12 @@ wanted_files = fl.readlines()
 wanted_files = [line.rstrip() for line in wanted_files]
 fl.close()
 
-all_files = [fl for fl in os.listdir(saveDir)]
+cmd = ['cp', './logo_cpexcv.png', saveDir+'.']
+subprocess.call(cmd)
 
-need_to_download = [fl for fl in all_files if fl in wanted_files]
+#all_files = [fl for fl in os.listdir(saveDir)]
+
+#need_to_download = [fl for fl in all_files if fl in wanted_files]
 
 
 
@@ -90,7 +94,7 @@ def downloadLink(imageUrl, imageName):
   """
   downloadLink (imageUrl, imageName)
 
-  Will attempt to download the image located at imageUrl and save it at the provided imageName. If the image is not available, it will print out the message, and set a working variable to False, to avoid further processing.
+  Will attempt to download the image located at imageUrl and save it at the provided imageName. If the image is not available, it will print out the message, and set a working variable to davis, to avoid further processing.
 
   Parameters:
   - imageUrl: the url of the image attempting to download (e.g. https:// ...)
@@ -163,6 +167,8 @@ print('')
 print('')
 print('')
 print('')
+
+
 
 if downloadImages:
   print("Downloading images for today's forecast.")
@@ -316,9 +322,9 @@ if downloadImages:
 
   # # # MODEL STUFF NOW - SINGLE IMAGES
   if switches['uwincm_clouds_current']:
-    print("... Downloading UWINCM cloud maps at forecast making time (16Z on current day).")
+    print("... Downloading UWINCM cloud maps at forecast making time (08Z on current day).")
     status = []
-    url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  today.strftime('%Y%m%d') + '16.jpg'
+    url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + yesterday.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  today.strftime('%Y%m%d') + '08.jpg'
     dl = downloadLink(url, saveDir + 'uwincm_clouds_current.jpg')
     count_good_links += dl
     count_bad_links += (1 - dl)
@@ -471,6 +477,7 @@ if downloadImages:
 
     write_switch('uwincm_surfaceWind_animation', status, fl_switch)
 
+
   if switches['uwincm_650mbRH_animation']:
     status = []
     if model_day1:
@@ -492,6 +499,7 @@ if downloadImages:
         status.append(dl)
 
     write_switch('uwincm_650mbRH_animation', status, fl_switch)
+
 
   if switches['uwincm_clouds_animation']:
     status = []
@@ -515,6 +523,7 @@ if downloadImages:
 
     write_switch('uwincm_clouds_animation', status, fl_switch)
 
+
   if switches['uwincm_precipitation_animation']:
     status = []
     if model_day1:
@@ -526,7 +535,6 @@ if downloadImages:
         count_bad_links += (1 - dl)
         status.append(dl)
 
-
     if model_day2:
       print("... Downloading UWINCM precipitation map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
@@ -537,6 +545,7 @@ if downloadImages:
         status.append(dl)
 
     write_switch('uwincm_precipitation_animation', status, fl_switch)
+
 
   if switches['uwincm_boundaryLayer_animation']:
     status = []
@@ -560,6 +569,7 @@ if downloadImages:
 
     write_switch('uwincm_boundaryLayer_animation', status, fl_switch)
 
+
   if switches['uutah_precipitation_animation']:
     status = []
     if model_day1:
@@ -581,6 +591,30 @@ if downloadImages:
         status.append(dl)
 
     write_switch('uutah_precipitation_animation', status, fl_switch)
+
+
+  if switches['ucdavis_precipitation_animation']:
+    status = []
+    if model_day1:
+      print("... Downloading UofDavis model precipitation map - animation - for model day 1.")
+      for frame in range(nFrames_uwincm):
+        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2)+'hr.d02.png'
+        dl = downloadLink(url, saveDir + 'ucdavis_precip_day1_anim_' + '{:02d}'.format(frame) + '.png')
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+
+    if model_day2:
+      print("... Downloading UofDavis model precipitation map - animation - for model day 2.")
+      for frame in range(nFrames_uwincm):
+        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2+24)+'hr.d02.png'
+        dl = downloadLink(url, saveDir + 'ucdavis_precip_day2_anim_' + '{:02d}'.format(frame) + '.png')
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+
+    write_switch('ucdavis_precipitation_animation', status, fl_switch)
+
 
   # NOW BACK TO OBSERVATIONS - ICAP
   if switches['icap_aerosol_ensemble']:
@@ -611,110 +645,35 @@ if downloadImages:
 
     write_switch('icap_aerosol_ensemble', status, fl_switch)
 
-  if switches['UTAH_dryrun']:
-   print("... Downloading UTAH cloud maps at forecast making time (16Z on current day).")
-   url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/tpw_olr-' + (today+timedelta(hours=16)).strftime('%Y-%m-%d_%H:%M:%S') + '_d01.png'
-   dl = downloadLink(url, saveDir + 'uutah_tpw_current.png')
-   count_good_links += dl
-   count_bad_links += (1 - dl)
-   status.append(dl)
 
-   var=['sfcwind','rhght650','tpw_olr','PBLH','slp_rain']
-   for vv in var:
-    if vv == 'PBLH' or vv == 'slp_rain':
-        dd = 'd02'
-    else:
-        dd = 'd01'
-    print("... Downloading UofUtah model "+ vv + " map - animation")
-    if vv == 'slp_rain':
-      for frame in range(7):
-        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day1+timedelta(hours=3) + timedelta(hours=3*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
-        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day1_anim_' + '{:02d}'.format(frame) + '.png')
-        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day2+timedelta(hours=3) + timedelta(hours=3*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
-        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day2_anim_' + '{:02d}'.format(frame) + '.png')
-        count_good_links += dl
-        count_bad_links += (1 - dl)
-        status.append(dl)
-    else:
-      for frame in range(nFrames_uwincm):
-        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
-        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day1_anim_' + '{:02d}'.format(frame) + '.png')
-        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
-        dl = downloadLink(url, saveDir + 'uutah_'+vv+'_day2_anim_' + '{:02d}'.format(frame) + '.png')
-        count_good_links += dl
-        count_bad_links += (1 - dl)
-        status.append(dl)
-   write_switch('UTAH_dryrun', status, fl_switch)
 
   if switches['ECMWF_prediction']:
     ECMWF_files=[]
-    for num in range(57): #57
-      ECMWF_files.append('anim_'+"{:02d}".format(num)+'.png')
+    for num in range(24): #57
+      ECMWF_files.append('anim_day3_'+"{:02d}".format(num)+'.png')
 
-    var = ['mslp_wind','midRH','mslp_pwat','mslp_pcpn']
+    var = ['z700_vort','z850_vort']#,'mslp_pcpn']
     for vv in var:
       print('... Downloading ECMWF -',vv)
       for idx, tau in enumerate(ECMWF_files):
         status = []
-    #https://www.tropicaltidbits.com/analysis/models/ecmwf/2022071106/ecmwf_mslp_pwat_atl_1.png
     # -----  00Z initialization simulations
         url_base = 'https://www.tropicaltidbits.com/analysis/models/ecmwf/' + (today).strftime('%Y%m%d')+'00/ecmwf_'
 
         if vv == 'mslp_pcpn':
             if idx > 0: dl = downloadLink(url_base+vv+'_atl_'+str(idx)+'.png', saveDir + 'ECMWF_'+vv+'_'+ECMWF_files[idx])
         else:
-            dl = downloadLink(url_base+vv+'_atl_'+str(idx+1)+'.png', saveDir + 'ECMWF_'+vv+'_'+ECMWF_files[idx])
+            dl = downloadLink(url_base+vv+'_nafr_'+str(idx+1+24)+'.png', saveDir + 'ECMWF_'+vv+'_'+ECMWF_files[idx])
 
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
     write_switch('ECMWF_prediction', status, fl_switch)
 
-  if switches['GFS_prediction']:
-    GFS_files=[]
-    for num in range(29):
-      GFS_files.append('anim_'+"{:02d}".format(num)+'.png')
-
-    var = ['mslp_wind','midRH','mslp_pwat','mslp_pcpn']
-    for vv in var:
-      print('... Downloading GFS -',vv)
-      for idx, tau in enumerate(GFS_files):
-        status = []
-    # -----  00Z initialization simulations
-        url_base = 'https://www.tropicaltidbits.com/analysis/models/gfs/' + (today).strftime('%Y%m%d')+'00/gfs_'
-
-        if vv == 'mslp_pcpn':
-            if idx > 0: dl = downloadLink(url_base+vv+'_atl_'+str(idx)+'.png', saveDir + 'GFS_'+vv+'_'+GFS_files[idx])
-        else:
-            dl = downloadLink(url_base+vv+'_atl_'+str(idx+1)+'.png', saveDir + 'GFS_'+vv+'_'+GFS_files[idx])
-        count_good_links += dl
-        count_bad_links += (1 - dl)
-        status.append(dl)
-    write_switch('GFS_prediction', status, fl_switch)
-
-  if switches['ICON_prediction']:
-    ICON_files=[]
-    for num in range(29):
-      ICON_files.append('anim_'+"{:02d}".format(num)+'.png')
-
-    var = ['mslp_wind','mslp_pcpn']
-    for vv in var:
-      print('... Downloading ICON -',vv)
-      for idx, tau in enumerate(ICON_files):
-        status = []
-    # -----  00Z initialization simulations
-        url_base = 'https://www.tropicaltidbits.com/analysis/models/icon/' + (today).strftime('%Y%m%d')+'00/icon_'
-
-        if vv == 'mslp_pcpn':
-            if idx > 0: dl = downloadLink(url_base+vv+'_atl_'+str(idx)+'.png', saveDir + 'ICON_'+vv+'_'+ICON_files[idx])
-        else:
-            dl = downloadLink(url_base+vv+'_atl_'+str(idx+1)+'.png', saveDir + 'ICON_'+vv+'_'+ICON_files[idx])
-        count_good_links += dl
-        count_bad_links += (1 - dl)
-        status.append(dl)
-    write_switch('ICON_prediction', status, fl_switch)
 
 
+
+  # NASA geos dust simulations
   if switches['nasa_geos']:
     fInitialTime = today.strftime('%Y%m%d') + 'T000000'
     img_url_pattern = '/missions/static//plots/'
@@ -756,21 +715,6 @@ if downloadImages:
                            'GEOS_dust_aot_day1_vert_' + str(dust_xLat) + 'W.png',
                            'GEOS_dust_aot_day2_vert_' + str(dust_xLat) + 'W.png']
 
-    #=== 700mb wind & geopotential height config
-    wind_700mb_tau = ['072', '078', '084', '090', '096', '102', '108', '114', '120', '126', '132', '138']
-
-    wind_700mb_files = ['GEOS_700mb_outlook_anim_00.png',
-                        'GEOS_700mb_outlook_anim_01.png',
-                        'GEOS_700mb_outlook_anim_02.png',
-                        'GEOS_700mb_outlook_anim_03.png',
-                        'GEOS_700mb_outlook_anim_04.png',
-                        'GEOS_700mb_outlook_anim_05.png',
-                        'GEOS_700mb_outlook_anim_06.png',
-                        'GEOS_700mb_outlook_anim_07.png',
-                        'GEOS_700mb_outlook_anim_08.png',
-                        'GEOS_700mb_outlook_anim_09.png',
-                        'GEOS_700mb_outlook_anim_10.png',
-                        'GEOS_700mb_outlook_anim_11.png']
 
 
     def find_geos_img_url(webpage,text_pattern,timeout):
@@ -889,21 +833,13 @@ if downloadImages:
       count_bad_links += (1 - dl)
       status.append(dl)
 
-    #Get 700 mb wind with geopotential heights
-    print("... Downloading images from GEOS - 700 mb wind and Geopotential heights.")
-    for idx, tau in enumerate(wind_700mb_tau):
-      wind700mb_prefix = AOT_url_prefix.replace('chem2d_mission', 'weather_mission')
-      wind700mb_suffix = AOT_url_suffix.replace('level=0','level=700')
-      wind700mb_page = wind700mb_prefix + 'tau=' + tau + wind700mb_suffix + '&field=wspd'
-      wind700m_img_url = find_geos_img_url(wind700mb_page, img_url_pattern, req_timeout)
-
-      dl = downloadLink(wind700m_img_url, saveDir + wind_700mb_files[idx])
-      count_good_links += dl
-      count_bad_links += (1 - dl)
-      status.append(dl)
-
 
     write_switch('nasa_geos', status, fl_switch)
+
+  #Write False to switches_process.txt
+  for s_dl in switches:
+      if switches[s_dl] == False:
+         write_switch(s_dl, '', fl_switch)
 
 
   total_links = count_good_links + count_bad_links

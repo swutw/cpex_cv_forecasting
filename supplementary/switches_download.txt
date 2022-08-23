@@ -5,9 +5,9 @@ mimic_tpw = True
 nhc_analysis = True
 sal_split = True
 
-icap_aerosol_ensemble = True
+icap_aerosol_ensemble = False
 nasa_geos = True
-nasa_geos_animation = True
+ECMWF_prediction = True
 
 uwincm_650mbRH = True
 uwincm_boundaryLayer = True
@@ -24,8 +24,4 @@ uwincm_surfaceWind_animation = True
 
 uutah_precipitation = True
 uutah_precipitation_animation = True
-
-ECMWF_prediction = True
-GFS_prediction = True
-ICON_prediction = True
-UTAH_dryrun = True
+ucdavis_precipitation_animation = False

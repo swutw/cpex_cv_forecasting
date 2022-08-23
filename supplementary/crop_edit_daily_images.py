@@ -58,7 +58,6 @@ def persistLastImage(fileDir, imageNameRoot, nDup=3):
     frame_num = [int(el[-6:-4]) for el in fls]
     for fl in range(nDup):
       cmd = ['cp', fileDir+imageNameRoot+'{:02d}'.format(frame_num[-1])+fls[-1][-4:], fileDir+imageNameRoot+'{:02d}'.format(frame_num[-1]+fl+1)+fls[-1][-4:]]
-
       subprocess.call(cmd)
   else:
     working = False
@@ -164,36 +163,9 @@ if processImages:
   all_files = sorted([el for el in os.listdir(saveDir)])
   print('Processing images.')
 
-  if switches['UTAH_dryrun']:
-    print('... UTAH precipitation and ECMWF precipitation - model day 1.')
-    fls_left = sorted([el for el in os.listdir(saveDir) if 'ECMWF_mslp_pcpn_day1_anim' in el])
-    fls_right = sorted([el for el in os.listdir(saveDir) if 'uutah_slp_rain_day1_anim' in el])
-    if len(fls_left) <= len(fls_right):
-      for num, fl in enumerate(fls_left):
-        cmd = ['convert', '+append', saveDir+fl, saveDir+fls_right[num], cropDir+'UtahEcmwf_joint_precip_day1_anim_' + '{:02d}'.format(num) + '.jpg']
-        subprocess.call(cmd)
-    else:
-      print('... ... The numbers of images for fields do not match.')
-
-
-    animationSteps(cropDir, 'UtahEcmwf_joint_precip_day1_anim_', 'UtahEcmwf_joint_precip_day1_movie.gif')
-
-    print('... UTAH precipitation and ECMWF precipitation - model day 2.')
-    fls_left = sorted([el for el in os.listdir(saveDir) if 'ECMWF_mslp_pcpn_day2_anim' in el])
-    fls_right = sorted([el for el in os.listdir(saveDir) if 'uutah_slp_rain_day2_anim' in el])
-    if len(fls_left) <= len(fls_right):
-      for num, fl in enumerate(fls_left):
-        cmd = ['convert', '+append', saveDir+fl, saveDir+fls_right[num], cropDir+'UtahEcmwf_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg']
-        subprocess.call(cmd)
-    else:
-      print('... ... The numbers of images for fields do not match.')
-
-
-    animationSteps(cropDir, 'UtahEcmwf_joint_precip_day2_anim_', 'UtahEcmwf_joint_precip_day2_movie.gif')
-
 
   if switches['nhc_analysis']:
-    print('... NHC analysis - cropping image and adding St.Croix and Sal locations.')
+    print('... NHC analysis - cropping image and adding   Sal locations.')
     current_files = [el for el in all_files if 'NHC_surface_analysis.png' in el]
 
     marker_radius = 5
@@ -201,10 +173,6 @@ if processImages:
       cmd = ['convert', saveDir+fl, '-crop', '1268x648+1100+350', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
-      #xPt, yPt = 952, 445
-      xPt, yPt = 370, 430
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
 
       xPt, yPt = 952, 445
       cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
@@ -217,29 +185,19 @@ if processImages:
       cmd = ['convert', saveDir+fl, '-crop', '900x665+0+0', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
-      xPt, yPt = 380, 433
-      cmd = ['convert', cropDir+fl, '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
       xPt, yPt = 775, 445
       cmd = ['convert', cropDir+fl, '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
 
   if switches['mimic_tpw']:
-    print('... MIMIC-TPW - cropping image and adding St.Croix and Sal locations.')
+    print('... MIMIC-TPW - cropping image and adding   Sal locations.')
     current_files = sorted([el for el in all_files if 'MIMIC-TPW' in el])
 
     marker_radius = 4
     for fl in current_files:
       cmd = ['convert', saveDir+fl, '-crop', '990x452+8+18', '+repage', cropDir+fl]
       subprocess.call(cmd)
-
-
-      xPt, yPt = 367, 305
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
 
       xPt, yPt = 665, 323
       cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
@@ -251,6 +209,49 @@ if processImages:
       os.rename(cropDir+fl, cropDir+fl[:24]+'{:02d}'.format(frame_number[num])+fl[-4:])
 
 
+
+  if switches['brammer_tropical_waves']:
+    print('   ... Tropical wave analysis - cropping image and adding Sal locations.')
+    current_files = [el for el in all_files if 'Brammer' in el]
+
+    marker_radius = 4
+    for fl in current_files:
+      cmd = ['convert', saveDir+fl, '-crop', '990x388+10+0', '+repage', cropDir+fl]
+      subprocess.call(cmd)
+
+      xPt, yPt = 662, 243
+      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      subprocess.call(cmd)
+
+
+
+  if switches['sal_split']:
+    print('   ... SAL dust split image - cropping image and adding Sal location.')
+    current_files = [el for el in all_files if 'SAL_dryAir_split' in el]
+
+    marker_radius = 6
+    for fl in current_files:
+      cmd = ['convert', saveDir+fl, '-crop', '1312x780+230+0', '+repage', cropDir+fl]
+      subprocess.call(cmd)
+
+      xPt, yPt = 1120, 488
+      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      subprocess.call(cmd)
+
+      # # # crop off the color bar
+      cmd = ['convert', saveDir+fl, '-crop', '682x38+430+782', '+repage', cropDir+fl[:-4]+'_cbar'+fl[-4:]]
+      subprocess.call(cmd)
+
+      # # # resize color bar
+      cmd = ['convert', cropDir+fl[:-4]+'_cbar'+fl[-4:], '-resize', '1312x73', '+repage', cropDir+fl[:-4]+'_cbar'+fl[-4:]]
+      subprocess.call(cmd)
+
+      print('      ... Adding a larger version of the color bar.')
+      # # # join original image and larger color bar together
+      cmd = ['convert', cropDir+fl, cropDir+fl[:-4]+'_cbar'+fl[-4:], '-append', cropDir+fl]
+      subprocess.call(cmd)
+
+
   if switches['meteosat_sat']:
     print('... Meteosat-11 - cropping image, adding Sal location, and adding a Celsius IR scale.')
     current_files = sorted([el for el in all_files if 'Meteosat' in el])
@@ -259,7 +260,6 @@ if processImages:
     #xPt, yPt = 600, 675
     xPt, yPt = 850, 910
     for fl in current_files:
-      subprocess.call(cmd)
       cmd = ['convert', saveDir+fl, '-crop', '3000x2000+0+0', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
@@ -305,7 +305,6 @@ if processImages:
         subprocess.call(cmd)
 
 
-
   if switches['GOES16_sat']:
     print('... GOES-16 - cropping image, adding St. Croix location, and adding a Celsius IR scale.')
     current_files = sorted([el for el in all_files if 'Goes16' in el])
@@ -313,7 +312,7 @@ if processImages:
     marker_radius = 12
     for fl in current_files:
       if ('IRC' or 'RGB') in fl:
-        xPt, yPt = 508, 860
+        xPt, yPt = 1340, 940
         cmd = ['convert', saveDir+fl, '-crop', '2000x2000+0+0', '+repage', cropDir+fl]
         subprocess.call(cmd)
 
@@ -378,7 +377,7 @@ if processImages:
     currentInd_goes = current_files_goes.index([fl for fl in current_files_goes if '_IRC.' in fl][0])
 
     # 1. crop off the color bar off of GOES16
-    cmd = ['convert', cropDir+current_files_goes[currentInd_goes], '-crop', '1750x2000+0+0', '+repage', cropDir+'temp1.png']
+    cmd = ['convert', cropDir+current_files_goes[currentInd_goes], '-crop', '502x2000+0+0', '+repage', cropDir+'temp1.png']
     subprocess.call(cmd)
 
     # 2. merge met file with goes file
@@ -392,194 +391,107 @@ if processImages:
       subprocess.call(cmd)
 
 
-  if switches['brammer_tropical_waves']:
-    print('   ... Tropical wave analysis - cropping image and adding St.Croix amd Sal locations.')
-    current_files = [el for el in all_files if 'Brammer' in el]
-
-    marker_radius = 4
-    for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '990x388+10+0', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-      xPt, yPt = 662, 243
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
-      xPt, yPt = 295, 237
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
-
-
-  if switches['sal_split']:
-    print('   ... SAL dust split image - cropping image and adding St.Croix location.')
-    current_files = [el for el in all_files if 'SAL_dryAir_split' in el]
-
-    marker_radius = 6
-    for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '1312x780+230+0', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-      xPt, yPt = 405, 468
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
-      xPt, yPt = 1120, 488
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
-      # # # crop off the color bar
-      cmd = ['convert', saveDir+fl, '-crop', '682x38+430+782', '+repage', cropDir+fl[:-4]+'_cbar'+fl[-4:]]
-      subprocess.call(cmd)
-
-      # # # resize color bar
-      cmd = ['convert', cropDir+fl[:-4]+'_cbar'+fl[-4:], '-resize', '1312x73', '+repage', cropDir+fl[:-4]+'_cbar'+fl[-4:]]
-      subprocess.call(cmd)
-
-      print('      ... Adding a larger version of the color bar.')
-      # # # join original image and larger color bar together
-      cmd = ['convert', cropDir+fl, cropDir+fl[:-4]+'_cbar'+fl[-4:], '-append', cropDir+fl]
-      subprocess.call(cmd)
-
 
   if switches['uwincm_clouds_animation'] or switches['uwincm_clouds_current'] or switches['uwincm_clouds']:
-    print('   ... UWIN-CM - clouds and TPW - cropping image and adding St.Croix and Sal locations.')
+    print('   ... UWIN-CM - clouds and TPW - cropping image and adding Sal locations.')
     current_files = sorted([el for el in all_files if 'uwincm_clouds' in el])
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x400+25+125', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-      # st croix
-      #largeD02
-      #xPt, yPt = 120, 165
-      #smallerD02 - 08-19
-      xPt, yPt = 303, 165
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', saveDir+fl, '-crop', '740x450+25+110', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
       # cape verde
       #largeD02
 #       xPt, yPt = 615, 180
 #       #smallerD02 - 08-19
-#       xPt, yPt = 615, 180
-#       cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-#       subprocess.call(cmd)
+      xPt, yPt = 448, 172
+      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      subprocess.call(cmd)
+
+
+
+  if switches['uwincm_boundaryLayer'] or switches['uwincm_boundaryLayer_animation']:
+    print('   ... UWIN-CM - boundary layer - cropping image and adding Sal locations.')
+    current_files = sorted([el for el in all_files if 'uwincm_boundaryLayer' in el])
+
+    marker_radius = 5
+    for fl in current_files:
+      cmd = ['convert', saveDir+fl, '-crop', '740x450+25+110', '+repage', cropDir+fl]
+      subprocess.call(cmd)
+
+      xPt, yPt = 454, 171
+      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      subprocess.call(cmd)
+
 
 
   if switches['uwincm_precipitation'] or switches['uwincm_precipitation_animation']:
-    print('   ... UWIN-CM - precipitation - cropping image and adding St.Croix and Sal locations.')
+    print('   ... UWIN-CM - precipitation - cropping image and adding Sal locations.')
     current_files = sorted([el for el in all_files if 'uwincm_precip' in el])
 
     marker_radius = 5
 
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x400+25+125', '+repage', cropDir+fl]
+      cmd = ['convert', saveDir+fl, '-crop', '740x500+25+110', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
-      # st croix
-      #xPt, yPt = 117, 230
-      #xPt, yPt = 120, 195
-      #xPt, yPt = 120, 165
-      #smallerD02 - 08-19
-      xPt, yPt = 303, 165
+      # Cape Verde
+      xPt, yPt = 454, 171
       cmd = ['convert', cropDir+fl, '-fill', 'black', '-stroke', 'red', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
-      # cape verde
-      #xPt, yPt = 612, 243
-      #xPt, yPt = 615, 210
-#       xPt, yPt = 615, 180
-#       cmd = ['convert', cropDir+fl, '-fill', 'black', '-stroke', 'red', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-#       subprocess.call(cmd)
 
 
   if switches['uutah_precipitation'] or switches['uutah_precipitation_animation']:
-    print('   ... Unversity of Utah - precipitation - cropping image and adding St.Croix location.')
+    print('   ... Unversity of Utah - precipitation - cropping image and adding Sal location.')
     current_files = sorted([el for el in all_files if 'uutah_precip' in el])
 
     marker_radius = 5
-    xPt, yPt = 177, 150
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '980x700+0+0', '+repage', cropDir+fl]
+      #cmd = ['convert', saveDir+fl, '-crop', '800x500+0+0', '+repage', cropDir+fl]
+      cmd = ['cp', saveDir+fl, cropDir+fl]
       subprocess.call(cmd)
 
-
+      xPt, yPt = 452, 187
       cmd = ['convert', cropDir+fl, '-fill', 'black', '-stroke', 'red', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
 
-  if switches['uwincm_boundaryLayer'] or switches['uwincm_boundaryLayer_animation']:
-    print('   ... UWIN-CM - boundary layer - cropping image and adding St.Croix and Sal locations.')
-    current_files = sorted([el for el in all_files if 'uwincm_boundaryLayer' in el])
-
-    marker_radius = 5
-    for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x400+25+125', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-
-      #xPt, yPt = 117, 230
-      #xPt, yPt = 120, 195
-      #xPt, yPt = 120, 165
-      #smallerD02 - 08-19
-      xPt, yPt = 303, 165
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
-      # cape verde
-      #xPt, yPt = 612, 243
-      #xPt, yPt = 615, 210
-#       xPt, yPt = 615, 180
-#       cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-#       subprocess.call(cmd)
-
 
   if switches['uwincm_surfaceWind'] or switches['uwincm_surfaceWind_animation']:
-    print('   ... UWIN-CM - surface winds - cropping image and adding St.Croix and Sal locations.')
+    print('   ... UWIN-CM - surface winds - cropping image and adding Sal locations.')
     current_files = sorted([el for el in all_files if ('uwincm_surfaceWind' in el)])
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '725x489+35+52', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-      #xPt, yPt = 240, 300
-      xPt, yPt = 265, 280
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', saveDir+fl, '-crop', '740x450+30+85', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
       # cape verde
-      #xPt, yPt = 595, 310
-      xPt, yPt = 567, 288
+      xPt, yPt = 542, 234
       cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
 
   if switches['uwincm_650mbRH'] or switches['uwincm_650mbRH_animation']:
-    print('   ... UWIN-CM - 650mb RH - cropping image and adding St.Croix and Sal locations.')
+    print('   ... UWIN-CM - 650mb RH - cropping image and adding Sal locations.')
     current_files = sorted([el for el in all_files if 'uwincm_650mbRH' in el])
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '725x489+35+52', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-      #xPt, yPt = 240, 300
-      xPt, yPt = 265, 280
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'white', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', saveDir+fl, '-crop', '740x450+30+85', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
       # cape verde
-      #xPt, yPt = 595, 310
-      xPt, yPt = 567, 288
+      xPt, yPt = 542, 234
       cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'white', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
 
+
   if switches['icap_aerosol_ensemble']:
-    print('   ... ICAP aerosol ensemble - cropping image and adding St.Croix and Sal locations.')
+    print('   ... ICAP aerosol ensemble - cropping image and adding Sal locations.')
     current_files = sorted([el for el in all_files if 'ICAP' in el])
 
     marker_radius = 4
@@ -587,33 +499,51 @@ if processImages:
       cmd = ['convert', saveDir+fl, '-crop', '825x530+80+85', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
-
-      xPt, yPt = 243, 318
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
       xPt, yPt = 490, 334
       cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
 
+
+  if switches['ECMWF_prediction']:
+    print('   ... ECMWF outlook - cropping image and adding Sal locations.')
+    current_files = sorted([el for el in all_files if 'ECMWF_z700_vort_anim' in el])
+
+    marker_radius = 4
+    for fl in current_files:
+      cmd = ['convert', saveDir+fl, '-crop', '971x547+0+0', '+repage', cropDir+fl]
+      subprocess.call(cmd)
+
+      xPt, yPt = 235, 325
+      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      subprocess.call(cmd)
+
+
+    current_files = sorted([el for el in all_files if 'ECMWF_z850_vort_anim' in el])
+
+    marker_radius = 4
+    for fl in current_files:
+      #cmd = ['convert', saveDir+fl, '-crop', '825x530+80+85', '+repage', cropDir+fl]
+      cmd = ['cp', saveDir+fl, cropDir+fl]
+      subprocess.call(cmd)
+
+      xPt, yPt = 235, 325
+      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      subprocess.call(cmd)
+
+
   if switches['nasa_geos']:
-    print('   ... NASA GEOS images - cropping image and adding St. Croix and Sal locations.')
+    print('   ... NASA GEOS images - cropping image and adding Sal locations.')
     current_files = sorted([el for el in all_files if 'GEOS_700mb_outlook' in el])
 
     marker_radius = 5
     for fl in current_files:
       cmd = ['convert', saveDir+fl, '-crop', '984x688+0+80', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-
-      xPt, yPt = 360, 325
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
+      #subprocess.call(cmd)
 
       xPt, yPt = 685, 335
       cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
+      #subprocess.call(cmd)
 
 
     current_files = sorted([el for el in all_files if ('GEOS_dust' in el) and ('vert' not in el)])
@@ -625,7 +555,7 @@ if processImages:
 
       xPt, yPt = 360, 325
       cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
+      #subprocess.call(cmd)
 
       xPt, yPt = 685, 335
       cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
@@ -640,11 +570,6 @@ if processImages:
       cmd = ['convert', saveDir+fl, '-crop', '1021x654+2+57', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
-
-      xPt, yPt = 385, 619
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
       xPt, yPt = 750, 619
       cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
@@ -657,8 +582,7 @@ if processImages:
       cmd = ['convert', saveDir+fl, '-crop', '1019x681+0+57', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
-
-      xPt, yPt = 510, 619
+      xPt, yPt = 495, 619
       cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
@@ -670,10 +594,6 @@ if processImages:
       cmd = ['convert', saveDir+fl, '-crop', '984x688+0+80', '+repage', cropDir+fl]
       subprocess.call(cmd)
 
-      xPt, yPt = 360, 325
-      cmd = ['convert', cropDir+fl, '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
-      subprocess.call(cmd)
-
       xPt, yPt = 685, 335
       cmd = ['convert', cropDir+fl, '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
@@ -683,10 +603,6 @@ if processImages:
     marker_radius = 5
     for fl in current_files:
       cmd = ['convert', saveDir+fl, '-crop', '984x688+0+80', '+repage', cropDir+fl]
-      subprocess.call(cmd)
-
-      xPt, yPt = 360, 325
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
       subprocess.call(cmd)
 
       xPt, yPt = 685, 335
@@ -708,6 +624,20 @@ print('')
 
 if joinSlideAnimations:
   print('Creating joint animations.')
+
+  if switches['ECMWF_prediction']:
+      print('... ECMWF 700 & 850 mb cyclonic vorticity')
+      fls_left = sorted([el for el in os.listdir(cropDir) if 'ECMWF_z700' in el])
+      fls_right = sorted([el for el in os.listdir(cropDir) if 'ECMWF_z850' in el])
+      if len(fls_left) <= len(fls_right):
+        for num, fl in enumerate(fls_left):
+          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'ECMWF_outlook_day3_anim_' + '{:02d}'.format(num) + '.jpg']
+          subprocess.call(cmd)
+      else:
+        print('... ... The numbers of images for fields do not match.')
+
+
+      animationSteps(cropDir, 'ECMWF_outlook_day3_anim_', 'ECMWF_outlook_day3.gif')
 
   if switches['uwincm_surfaceWind_animation'] and switches['uwincm_650mbRH_animation']:
 
@@ -805,50 +735,6 @@ if joinSlideAnimations:
 
       animationSteps(cropDir, 'uwincm_joint_precip_day2_anim_', 'uwincm_joint_precip_day2_movie.gif')
 
-    if switch['UTAH_dryrun']:
-      print('... UTAH precipitation and ECMWF precipitation - model day 1.')
-      fls_left = sorted([el for el in os.listdir(saveDir) if 'uutah_slp_rain_day1_anim' in el])
-      fls_right = sorted([el for el in os.listdir(saveDir) if 'ECMWF_mslp_pcpn_day1_anim' in el])
-      if len(fls_left) <= len(fls_right):
-        for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', saveDir+fl, saveDir+fls_right[num], cropDir+'UtahEcmwf_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg']
-          subprocess.call(cmd)
-      else:
-        print('... ... The numbers of images for fields do not match.')
-
-
-      animationSteps(cropDir, 'UtahEcmwf_joint_precip_day2_anim_', 'UtahEcmwf_joint_precip_day2_movie.gif')
-
-
-
-
-
-  moving_files=[      'ECMWF_mslp_pcpn_day1.gif',
-                      'ECMWF_mslp_pcpn_day2.gif',
-                      'ECMWF_mslp_wind_day1.gif',
-                      'ECMWF_mslp_wind_day2.gif',
-                      'ECMWF_mslp_pwat_day1.gif',
-                      'ECMWF_mslp_pwat_day2.gif',
-                      'ECMWF_midRH_day1.gif',
-                      'ECMWF_midRH_day2.gif',
-                      'ICON_mslp_pcpn_day1.gif',
-                      'ICON_mslp_pcpn_day2.gif',
-                      'uutah_sfcwind_day1_movie.gif',
-                      'uutah_sfcwind_day2_movie.gif',
-                      'uutah_tpw_olr_day1_movie.gif',
-                      'uutah_tpw_olr_day2_movie.gif',
-                      'uutah_slp_rain_day1_movie.gif',
-                      'uutah_slp_rain_day2_movie.gif',
-                      'uutah_rhght650_day1_movie.gif',
-                      'uutah_rhght650_day2_movie.gif',
-                      'uutah_PBLH_day1_movie.gif',
-                      'uutah_PBLH_day2_movie.gif',
-                      'uutah_tpw_current.png'
-                      ]
-  for ff in moving_files:
-    cmd = ['cp', saveDir+ff, cropDir+'.']
-    subprocess.call(cmd)
-
   print('Creating joint animations complete.')
 
 
@@ -899,24 +785,7 @@ if moveFinalImages:
                     'GEOS_highCloudFraction_day2.png',
                     'ICAP_aerosol_ensemble_96.png',
                     'ICAP_aerosol_ensemble_120.png',
-                    'GEOS_700mb_outlook_movie.gif',
-                    'ECMWF_mslp_pcpn_day1.gif',
-                    'ECMWF_mslp_pcpn_day2.gif',
-                    'ICON_mslp_pcpn_day1.gif',
-                    'ICON_mslp_pcpn_day2.gif',
-                    'UtahEcmwf_joint_precip_day1_movie.gif',
-                    'UtahEcmwf_joint_precip_day2_movie.gif',
-                    'uutah_sfcwind_day1_movie.gif',
-                    'uutah_sfcwind_day2_movie.gif',
-                    'uutah_tpw_olr_day1_movie.gif',
-                    'uutah_tpw_olr_day2_movie.gif',
-                    'uutah_slp_rain_day1_movie.gif',
-                    'uutah_slp_rain_day2_movie.gif',
-                    'uutah_rhght650_day1_movie.gif',
-                    'uutah_rhght650_day2_movie.gif',
-                    'uutah_PBLH_day1_movie.gif',
-                    'uutah_PBLH_day2_movie.gif',
-                    'uutah_tpw_current.png'
+                    'ECMWF_outlook_day3.gif',
                     ]
 
     # additional images, when they become available:
@@ -931,3 +800,53 @@ if moveFinalImages:
 
   print('Moving final images and animations complete.')
   time.sleep(10)
+
+
+  rename_of_images = ['logo_cpexcv.png',
+                    '02_NHC_surface_analysis.png',
+                    '03_MIMIC-TPW_latest.png',
+                    '03_uwincm_clouds_current.jpg',
+                    '03_AEW_Brammer.jpg',
+                    '03_Goes16_Meteosat11_IRC.png',
+                    '04_SAL_dryAir_split.jpg',
+                    '04_GEOS_dust_aot.png',
+                    '05_NHC_2day_outlook.png',
+                    '05_NHC_5day_outlook.png',
+                    '06_uwincm_joint_surfaceWind_650mbRH_day1_movie.gif',
+                    '07_uwincm_joint_clouds_boundaryLayer_day1_movie.gif',
+                    '08_uwincm_joint_precip_day1_movie.gif',
+                    '09_uwincm_joint_surfaceWind_650mbRH_day2_movie.gif',
+                    '10_uwincm_joint_clouds_boundaryLayer_day2_movie.gif',
+                    '11_uwincm_joint_precip_day2_movie.gif',
+                    '12_GEOS_dust_aot_vert_15N.png',
+                    '12_GEOS_dust_aot_vert_20W.png',
+                    '13_GEOS_dust_aot_day1.png',
+                    '13_GEOS_dust_aot_day1_vert_15N.png',
+                    '13_GEOS_dust_aot_day1_vert_20W.png',
+                    '14_GEOS_dust_aot_day2.png',
+                    '14_GEOS_dust_aot_day2_vert_15N.png',
+                    '14_GEOS_dust_aot_day2_vert_20W.png',
+                    '12_GEOS_total_aot.png',
+                    '13_GEOS_total_aot_day1.png',
+                    '14_GEOS_total_aot_day2.png',
+                    '15_GEOS_lowCloudFraction_day1.png',
+                    '15_GEOS_lowCloudFraction_day2.png',
+                    '15_GEOS_midCloudFraction_day1.png',
+                    '15_GEOS_midCloudFraction_day2.png',
+                    '15_GEOS_highCloudFraction_day1.png',
+                    '15_GEOS_highCloudFraction_day2.png',
+                    '16_ICAP_aerosol_ensemble_96.png',
+                    '16_ICAP_aerosol_ensemble_120.png',
+                    '17_ECMWF_outlook_day3.gif',
+                    ]
+
+  for fl, fl_r in zip(list_of_images, rename_of_images):
+      if os.path.isfile(finDir+fl):
+        os.system('mv ' + finDir+fl + ' ' + finDir+fl_r)
+      else:
+        print('... ... ' + fl + ' not present and cannot be copied over.')
+
+  #GEOS_dust_aot.png is used twice in the slide
+  cmd = ['cp', finDir+'GEOS_dust_aot.png', finDir+'12_GEOS_dust_aot.png']
+
+  print('Rename final images and animations complete.')
