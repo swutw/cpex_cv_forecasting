@@ -33,11 +33,6 @@ Google Drive slides for forecasting template: https://docs.google.com/presentati
  - You will need to open it up and edit a few things (instructions at the top of the .sh file)
     - Decide on steps you need to run for true/false switches. Best to keep 1-5 true.
 
-2. Just before you present, **./run_update_latest_imagery.sh** will run the download and processing steps, but only for satellite imagery, which has probably been updated since the beginning of the forecasting.
-    - Download and processing is hardwired, but you can turn off PDF compilation.
-
- - NOTE: it assumes you are operating in bash
-
 -------------------------------------------
 # Steps for manually downloading the figures
 
@@ -71,12 +66,6 @@ This reads in _switches_process.txt_ that was created in 2. It's automatic, so n
     - puts all final imagery (for the .pptx template) to _./figs_final/_.
 
 
-**Just before you are ready to present**
-5. Update the observed imagery that might have been refreshed while you were forecasting: **./run_update_observed_imagrey.sh** or **python ./supplementary/update_observed_imagrey.py**
-- this will only update NHC surface analysis, MIMIC-TPW imagery, GOES-16 and Meteosat-11, SAL split-window, and ICAP imagery.
-- before it overwrites the images in ./figs_final/, it will copy the originals to *_backup*. So in case something is wrong with the latest imagery, you always have the option to go back to the original image. If you run the script multiple times, it will keep backups of each iteration.
-
-
 -------------------------------------------
 # Steps for creating the Microsoft PowerPoint template
 Make sure you have downloaded image files and cropped them before starting this.
@@ -103,12 +92,6 @@ As you add each new link, the empty figure should be replaced with what it is be
 
 5. Annotate the document with comments, highlights, summaries, etc.
 
-6. After you are done with annotations (or ~20 min before presenting), run the script to refresh observed imagery (**./run_update_latest_imagery.sh**). This way your document will include the latest available observations.
+6. Copy (or Duplicate) the finished PPT file, and name it following this example: **CPEX-CV_Forecast_YYYY-MM-DD.pptx**
 
-7. Copy (or Duplicate) the finished PPT file, and name it following this example: **CPEX-CV_Forecast_YYYY-MM-DD.pptx**
-
-8. Move the final document to Google Drive.
-
-9. This should be it. But just to double-check that everything has been linked correctly:
-- Transfer the finalized PPT file to someone else's computer (like the second forecaster). Since the file is large, you can do it through Google Drive (virtually), or through a thumb drive (manually).
-- Check that all images appear on a second computer.
+7. Move the final document to Google Drive.
