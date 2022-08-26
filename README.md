@@ -24,7 +24,7 @@ Google Drive slides for forecasting template: https://docs.google.com/presentati
 
 
 -------------------------------------------
-# Steps for automatically creating the LaTeX template
+# Steps for automatically downloading the figures
 
 (This won't work unless your manual steps work.)
  - Before you run them for the first time, you will need to make the files executable (on Mac/Linux: chmod +x run_forecast_scripts.sh, chmod +x run_update_latest_imagery.sh)
@@ -40,7 +40,7 @@ Google Drive slides for forecasting template: https://docs.google.com/presentati
  - NOTE: it assumes you are operating in bash
 
 -------------------------------------------
-# Steps for manually creating the LaTeX template
+# Steps for manually downloading the figures
 
 These should be run from the main directory.
 
