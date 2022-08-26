@@ -56,7 +56,7 @@ finDir = './figs_final/'
 
 
 #today = datetime.today()
-today = datetime.strptime('2022-08-22', '%Y-%m-%d')
+today = datetime.strptime('2022-08-25', '%Y-%m-%d')
 today = today.replace(hour=0, minute=0, second=0, microsecond=0)
 yesterday = today - timedelta(days=1)
 forecast_day1 = today + timedelta(days=1)
