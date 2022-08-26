@@ -6,7 +6,7 @@ To run the scripts in this directory, you will need to following:
 
 1. ImageMagick (for image processing).
 2. Python v3.x (I use 3.7.4) with following modules:
-    - bs4 (HTML parsing)
+    - bs4 (HTML parsing; if python yells at you about "Couldn't find a tree builder ", you may have to conda/pip install lxml)
     - datetime (dealing with dates)
     - numpy (number stuff)
     - Image (Create gif files)
@@ -14,8 +14,7 @@ To run the scripts in this directory, you will need to following:
     - subprocess (executing code outside python)
     - urllib (retrieving images)
     - time
-3. LaTeX compiler (for making pdf documents so it won't be a necessary requirement.) or Microsoft Powerpoint.
-4. Adobe Acrobat Reader (if creating PDF with animations).
+3. Microsoft Powerpoint.
 
 
 Google Drive document with links and resources: https://docs.google.com/document/d/1fbgHyg7smXdD6AVZyczOzl1UvFjeB5TxeZdQ1_8xoxE/edit?usp=sharing
@@ -27,7 +26,7 @@ Google Drive slides for forecasting template: https://docs.google.com/presentati
 # Steps for automatically downloading the figures
 
 (This won't work unless your manual steps work.)
- - Before you run them for the first time, you will need to make the files executable (on Mac/Linux: chmod +x run_forecast_scripts.sh, chmod +x run_update_latest_imagery.sh)
+ - Before you run them for the first time, you will need to make the files executable (on Mac/Linux: chmod +x run_forecast_scripts.sh)
 
 1. **./run_forecast_scripts.sh** will run all the steps in the manual section **BUT**
 
