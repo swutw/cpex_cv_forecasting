@@ -33,12 +33,12 @@ model_day1 = model_day2 = False
 
 nDup_frames = 3
 
-forecastDir = './'
-saveDir = './figs/'
-cropDir = './figs_cropped/'
-finDir = './figs_final/'
+forecastDir = os.getcwd()
+saveDir = os.path.join('.','figs')
+cropDir = os.path.join('.','figs_cropped')
+finDir  = os.path.join('.','figs_final')
 
-fl = open('./supplementary/list_of_downloaded_files.txt', 'r')
+fl = open( os.path.join('.','supplementary','list_of_downloaded_files.txt'), 'r')
 wanted_files = fl.readlines()
 wanted_files = [line.rstrip() for line in wanted_files]
 fl.close()
@@ -64,7 +64,7 @@ def persistLastImage(fileDir, imageNameRoot, nDup=3):
     working = True
     frame_num = [int(el[-6:-4]) for el in fls]
     for fl in range(nDup):
-      cmd = ['cp', fileDir+imageNameRoot+'{:02d}'.format(frame_num[-1])+fls[-1][-4:], fileDir+imageNameRoot+'{:02d}'.format(frame_num[-1]+fl+1)+fls[-1][-4:]]
+      cmd = ['cp', os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1])+fls[-1][-4:]), os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1]+fl+1)+fls[-1][-4:]) ]
 
       subprocess.call(cmd)
   else:
@@ -86,7 +86,7 @@ def createAnimation(fileDir, imageNameRoot, outName, delay=50, loop=0):
   - delay: delay in ms
   - loop: 0 means repeating
   """
-  cmd = ['convert', '-delay', str(delay), fileDir+imageNameRoot+'*', '-loop', str(loop), '+repage', fileDir+outName]
+  cmd = ['convert', '-delay', str(delay), os.path.join(fileDir,imageNameRoot+'*'), '-loop', str(loop), '+repage', os.path.join(fileDir,outName) ]
   subprocess.call(cmd)
 
   return
@@ -116,7 +116,7 @@ def animationSteps(fileDir, imageNameRoot, outName):
 
 if readSwitches:
   print("Reading True/False switches from switches_process.txt")
-  fl = open(forecastDir + './supplementary/switches_process.txt', 'r')
+  fl = open( os.path.join(forecastDir,'supplementary','switches_process.txt'), 'r')
   data = fl.readlines()
   fl.close()
   data = [line.rstrip() for line in data]
@@ -236,10 +236,10 @@ if createAnimations:
       for vv in var:
           images=[]
           for num in range(0,24):
-              images.append(Image.open('./figs/ECMWF_'+vv+'_anim_day3_'+"{:02d}".format(num)+'.png'))
+              images.append(Image.open( os.path.join(saveDir,'ECMWF_'+vv+'_anim_day3_'+"{:02d}".format(num)+'.png') ))
           for rep in range(3):
-              images.append(Image.open('./figs/ECMWF_'+vv+'_anim_day3_'+"{:02d}".format(num)+'.png'))
-          images[0].save('./figs/ECMWF_'+vv+'_day3.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
+              images.append(Image.open( os.path.join(saveDir,'ECMWF_'+vv+'_anim_day3_'+"{:02d}".format(num)+'.png') ))
+          images[0].save(os.path.join(saveDir,'ECMWF_'+vv+'_day3.gif'), save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
 
 
 

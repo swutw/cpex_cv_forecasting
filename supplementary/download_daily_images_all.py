@@ -25,6 +25,7 @@ Updates:
  - 2022-07-01: Major modification for the Cabo Verde forecasting
  - 2022-07-08: ECMWF, GFS, and ICON Global forecasting models
  - 2022-08-15: ECMWF 5 days outlook
+ - 2022-08-26: Adopt to all operating systems
 """
 
 
@@ -48,16 +49,17 @@ downloadImages = True
 model_day1 = model_day2 = True
 
 
-forecastDir = './'
-saveDir = './figs/'
-cropDir = './figs_cropped/'
-finDir = './figs_final/'
+forecastDir = os.getcwd()
+saveDir = os.path.join('.','figs')
+cropDir = os.path.join('.','figs_cropped')
+finDir  = os.path.join('.','figs_final')
 
 
 
 #today = datetime.today()
-today = datetime.strptime('2022-08-25', '%Y-%m-%d')
+today = datetime.strptime('2022-08-26', '%Y-%m-%d')
 today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+today_m = today - timedelta(days=1)
 yesterday = today - timedelta(days=1)
 forecast_day1 = today + timedelta(days=1)
 forecast_day2 = today + timedelta(days=2)
@@ -72,14 +74,14 @@ count_bad_links = 0
 
 pwd = os.getcwd()
 if 'supplementary' in pwd:
-  fl = open('./list_of_downloaded_files.txt', 'r')
+  fl = open(os.path.join('.','list_of_downloaded_files.txt'), 'r')
 else:
-  fl = open('./supplementary/list_of_downloaded_files.txt', 'r')
+  fl = open(os.path.join(forecastDir,'supplementary','list_of_downloaded_files.txt'), 'r')
 wanted_files = fl.readlines()
 wanted_files = [line.rstrip() for line in wanted_files]
 fl.close()
 
-cmd = ['cp', './logo_cpexcv.png', saveDir+'.']
+cmd = ['cp', os.path.join(forecastDir,'logo_cpexcv.png'), os.path.join(saveDir,'.')]
 subprocess.call(cmd)
 
 #all_files = [fl for fl in os.listdir(saveDir)]
@@ -136,9 +138,9 @@ def write_switch(switch_name, status, fl):
 if readSwitches:
   print("Reading True/False switches from switches_download.txt")
   if 'supplementary' in pwd:
-    fl = open('./switches_download.txt', 'r')
+    fl = open(os.path.join('.','switches_download.txt'), 'r')
   else:
-    fl = open(forecastDir + '/supplementary/switches_download.txt', 'r')
+    fl = open(os.path.join(forecastDir, 'supplementary','switches_download.txt'), 'r')
   data = fl.readlines()
   fl.close()
   data = [line.rstrip() for line in data]
@@ -154,9 +156,9 @@ if readSwitches:
         switches[switch_name] = False
 
   if 'supplementary' in pwd:
-    fl_switch = open('./switches_process.txt', 'w')
+    fl_switch = open(os.path.join('.','switches_process.txt'), 'w')
   else:
-    fl_switch = open(forecastDir + '/supplementary/switches_process.txt', 'w')
+    fl_switch = open(os.path.join(forecastDir, 'supplementary','switches_process.txt'), 'w')
 
 
   print("Reading True/False switches complete.")
@@ -179,20 +181,20 @@ if downloadImages:
     status = []
 
     url = 'https://www.nhc.noaa.gov/tafb_latest/USA_latest.gif'
-    dl = downloadLink(url, saveDir + 'NHC_surface_analysis.gif')
+    dl = downloadLink(url, os.path.join(saveDir,'NHC_surface_analysis.gif'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
 
     if dl:
       print('    ... Converting .gif image to .png image.')
-      cmd = ['convert',  '-coalesce', saveDir + 'NHC_surface_analysis.gif', saveDir + 'NHC_surface_analysis.png']
+      cmd = ['convert',  '-coalesce', os.path.join(saveDir,'NHC_surface_analysis.gif'), os.path.join(saveDir,'NHC_surface_analysis.png')]
       subprocess.call(cmd)
 
     print('... Downloading NHC tropical weather 2-day outlook.')
 
     url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_2d0.png'
-    dl = downloadLink(url, saveDir + 'NHC_2day_outlook.png')
+    dl = downloadLink(url, os.path.join(saveDir,'NHC_2day_outlook.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -200,7 +202,7 @@ if downloadImages:
     print('... Downloading NHC tropical weather 5-day outlook.')
 
     url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_5d0.png'
-    dl = downloadLink(url, saveDir + 'NHC_5day_outlook.png')
+    dl = downloadLink(url, os.path.join(saveDir,'NHC_5day_outlook.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -213,7 +215,7 @@ if downloadImages:
     status = []
 
     url = 'http://tropic.ssec.wisc.edu/real-time/mtpw2/webAnims/tpw_nrl_colors/natl/mimictpw_natl_latest.gif'
-    dl = downloadLink(url, saveDir + 'MIMIC-TPW_24h_animation.gif')
+    dl = downloadLink(url, os.path.join(saveDir,'MIMIC-TPW_24h_animation.gif'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -221,7 +223,7 @@ if downloadImages:
     print('    ... Converting .gif animation to .png sequence of images.')
 
     if dl:
-      cmd = ['convert',  '-coalesce', saveDir + 'MIMIC-TPW_24h_animation.gif', saveDir + 'MIMIC-TPW_24h_animation.png']
+      cmd = ['convert',  '-coalesce', os.path.join(saveDir,'MIMIC-TPW_24h_animation.gif'), os.path.join(saveDir,'MIMIC-TPW_24h_animation.png')]
       subprocess.call(cmd)
 
       print('    ... Finding the latest image and setting it to _latest.')
@@ -229,7 +231,7 @@ if downloadImages:
       fls = [fl for fl in fls if 'MIMIC-TPW_24h_animation' in fl]
       frame_number = [int(fl.split('-')[-1][:-4]) for fl in fls]
       latest_frame = fls[0][:24] + str(max(frame_number)) + '.png'
-      cmd = ['cp', saveDir+latest_frame, saveDir+'MIMIC-TPW_latest.png']
+      cmd = ['cp', os.path.join(saveDir,latest_frame), os.path.join(saveDir,'MIMIC-TPW_latest.png')]
       subprocess.call(cmd)
 
     write_switch('mimic_tpw', status, fl_switch)
@@ -240,21 +242,21 @@ if downloadImages:
     status = []
 
     url = 'https://satcorps.larc.nasa.gov/prod/exp/cpex-aw-2020/satpng/g16/latest/G16.LATEST.01KM.HVIS.PNG'
-    dl = downloadLink(url, saveDir + 'Goes16_VIS.png')
+    dl = downloadLink(url, os.path.join(saveDir,'Goes16_VIS.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
 
     print('... Downloading GOES16 RGB satellite imagery.')
     url = 'https://satcorps.larc.nasa.gov/prod/exp/cpex-aw-2020/satpng/g16/latest/G16.LATEST.02KM.RGB.PNG'
-    dl = downloadLink(url, saveDir + 'Goes16_RGB.png')
+    dl = downloadLink(url, os.path.join(saveDir,'Goes16_RGB.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
 
     print('... Downloading GOES16 IRC satellite imagery.')
     url = 'https://satcorps.larc.nasa.gov/prod/exp/cpex-aw-2020/satpng/g16/latest/G16.LATEST.02KM.IRC.PNG'
-    dl = downloadLink(url, saveDir + 'Goes16_IRC.png')
+    dl = downloadLink(url, os.path.join(saveDir,'Goes16_IRC.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -267,14 +269,14 @@ if downloadImages:
     status = []
 
     url = 'https://satcorps.larc.nasa.gov/prod/exp/cpex-aw-2020/satpng/met/latest/M11.LATEST.03KM.VIS.PNG'
-    dl = downloadLink(url, saveDir + 'Meteosat11_VIS.png')
+    dl = downloadLink(url, os.path.join(saveDir,'Meteosat11_VIS.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
 
     print('... Downloading Meteosat-11 IRC satellite imagery.')
     url = 'https://satcorps.larc.nasa.gov/prod/exp/cpex-aw-2020/satpng/met/latest/M11.LATEST.03KM.IRC.PNG'
-    dl = downloadLink(url, saveDir + 'Meteosat11_IRC.png')
+    dl = downloadLink(url, os.path.join(saveDir,'Meteosat11_IRC.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -292,12 +294,12 @@ if downloadImages:
 
 
     url = 'http://www.atmos.albany.edu/student/abrammer/graphics/gfs_realtime/plots/prate_sf_mslp/ea_prate_sf_mslp_' + str(time_diff) + '.0.jpg'
-    dl = downloadLink(url, saveDir + 'AEW_Brammer.jpg')
+    dl = downloadLink(url, os.path.join(saveDir,'AEW_Brammer.jpg'))
     if not dl:
       time_diff += 6
       url = 'http://www.atmos.albany.edu/student/abrammer/graphics/gfs_realtime/plots/prate_sf_mslp/ea_prate_sf_mslp_' + str(time_diff) + '.0.jpg'
       print('    ... Trying a different time.')
-      dl = downloadLink(url, saveDir + 'AEW_Brammer.jpg')
+      dl = downloadLink(url, os.path.join(saveDir,'AEW_Brammer.jpg'))
 
 
     count_good_links += dl
@@ -312,7 +314,7 @@ if downloadImages:
     status = []
 
     url = 'http://tropic.ssec.wisc.edu/real-time/sal/g16split/g16split.jpg'
-    dl = downloadLink(url, saveDir + 'SAL_dryAir_split.jpg')
+    dl = downloadLink(url, os.path.join(saveDir,'SAL_dryAir_split.jpg'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -325,7 +327,7 @@ if downloadImages:
     print("... Downloading UWINCM cloud maps at forecast making time (08Z on current day).")
     status = []
     url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + yesterday.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  today.strftime('%Y%m%d') + '08.jpg'
-    dl = downloadLink(url, saveDir + 'uwincm_clouds_current.jpg')
+    dl = downloadLink(url, os.path.join(saveDir,'uwincm_clouds_current.jpg'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -336,16 +338,16 @@ if downloadImages:
     status = []
     if model_day1:
       print("... Downloading UWINCM surface wind map - single - for model day 1.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_surfaceWind_day1.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_surfaceWind_day1.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
 
     if model_day2:
       print("... Downloading UWINCM surface wind map - single -  for model day 2.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_surfaceWind_day2.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_surfaceWind_day2.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -357,16 +359,16 @@ if downloadImages:
     status = []
     if model_day1:
       print("... Downloading UWINCM 650mb moisture map - single - for model day 1.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_650mbRH_day1.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_650mbRH_day1.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
 
     if model_day2:
       print("... Downloading UWINCM 650mb moisture map - single - for model day 2.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_650mbRH_day2.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_650mbRH_day2.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -377,16 +379,16 @@ if downloadImages:
     status = []
     if model_day1:
       print("... Downloading UWINCM cloud map - single - for model day 1.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_clouds_day1.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_clouds_day1.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
 
     if model_day2:
       print("... Downloading UWINCM cloud map - single - for model day 2.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_clouds_day2.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_clouds_day2.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -397,16 +399,16 @@ if downloadImages:
     status = []
     if model_day1:
       print("... Downloading UWINCM precipitation map - single - for model day 1.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_precip_day1.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day1.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
 
     if model_day2:
       print("... Downloading UWINCM precipitation map - single - for model day 2.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_precip_day2.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day2.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -417,16 +419,16 @@ if downloadImages:
     status = []
     if model_day1:
       print("... Downloading UWINCM boundary layer map - single - for model day 1.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_boundaryLayer_day1.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_boundaryLayer_day1.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
 
     if model_day2:
       print("... Downloading UWINCM boundary layer map - single - for model day 2.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, saveDir + 'uwincm_boundaryLayer_day2.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+      dl = downloadLink(url, os.path.join(saveDir,'uwincm_boundaryLayer_day2.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -437,16 +439,16 @@ if downloadImages:
     status = []
     if model_day1:
       print("... Downloading UofUtah model precipitation map - single - for model day 1.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  forecast_day1.strftime('%Y-%m-%d') + '_' + '{:02d}'.format(still_image_forecast_hr) + ':00:00_d02.png'
-      dl = downloadLink(url, saveDir + 'uutah_precip_day1.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  forecast_day1.strftime('%Y-%m-%d') + '_' + '{:02d}'.format(still_image_forecast_hr) + ':00:00_d02.png'
+      dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day1.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
 
     if model_day2:
       print("... Downloading UofUtah model precipitation map - single - for model day 2.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  forecast_day2.strftime('%Y-%m-%d') + '_' + '{:02d}'.format(still_image_forecast_hr) + ':00:00_d02.png'
-      dl = downloadLink(url, saveDir + 'uutah_precip_day2.jpg')
+      url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  forecast_day2.strftime('%Y-%m-%d') + '_' + '{:02d}'.format(still_image_forecast_hr) + ':00:00_d02.png'
+      dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day2.jpg'))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -460,8 +462,8 @@ if downloadImages:
     if model_day1:
       print("... Downloading UWINCM surface wind map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_surfaceWind_day1_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_surfaceWind_day1_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -469,8 +471,8 @@ if downloadImages:
     if model_day2:
       print("... Downloading UWINCM surface wind map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_surfaceWind_day2_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/windsfc/wspd.large.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_surfaceWind_day2_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -483,8 +485,8 @@ if downloadImages:
     if model_day1:
       print("... Downloading UWINCM 650mb moisture map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_650mbRH_day1_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_650mbRH_day1_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -492,8 +494,8 @@ if downloadImages:
     if model_day2:
       print("... Downloading UWINCM 650mb moisture map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_650mbRH_day2_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/large/rh650mb/650mb_rh.large.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_650mbRH_day2_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -506,8 +508,8 @@ if downloadImages:
     if model_day1:
       print("... Downloading UWINCM cloud map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_clouds_day1_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_clouds_day1_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -515,8 +517,8 @@ if downloadImages:
     if model_day2:
       print("... Downloading UWINCM cloud map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_clouds_day2_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_clouds_day2_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -529,8 +531,8 @@ if downloadImages:
     if model_day1:
       print("... Downloading UWINCM precipitation map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_precip_day1_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day1_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -538,8 +540,8 @@ if downloadImages:
     if model_day2:
       print("... Downloading UWINCM precipitation map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_precip_day2_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day2_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -552,8 +554,8 @@ if downloadImages:
     if model_day1:
       print("... Downloading UWINCM boundary layer map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_boundaryLayer_day1_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_boundaryLayer_day1_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -561,8 +563,8 @@ if downloadImages:
     if model_day2:
       print("... Downloading UWINCM boundary layer map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
-        dl = downloadLink(url, saveDir + 'uwincm_boundaryLayer_day2_anim_' + '{:02d}'.format(frame) + '.jpg')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/blh/blh.storm.' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y%m%d%H') + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_boundaryLayer_day2_anim_' + '{:02d}'.format(frame) + '.jpg'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -575,8 +577,8 @@ if downloadImages:
     if model_day1:
       print("... Downloading UofUtah model precipitation map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_d02.png'
-        dl = downloadLink(url, saveDir + 'uutah_precip_day1_anim_' + '{:02d}'.format(frame) + '.png')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_d02.png'
+        dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day1_anim_' + '{:02d}'.format(frame) + '.png'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -584,8 +586,8 @@ if downloadImages:
     if model_day2:
       print("... Downloading UofUtah model precipitation map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_d02.png'
-        dl = downloadLink(url, saveDir + 'uutah_precip_day2_anim_' + '{:02d}'.format(frame) + '.png')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/uutah/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/slp_rain-' +  (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_d02.png'
+        dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day2_anim_' + '{:02d}'.format(frame) + '.png'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -598,8 +600,8 @@ if downloadImages:
     if model_day1:
       print("... Downloading UofDavis model precipitation map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2)+'hr.d02.png'
-        dl = downloadLink(url, saveDir + 'ucdavis_precip_day1_anim_' + '{:02d}'.format(frame) + '.png')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today_m.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2)+'hr.d02.png'
+        dl = downloadLink(url, os.path.join(saveDir,'ucdavis_precip_day1_anim_' + '{:02d}'.format(frame) + '.png'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -607,8 +609,8 @@ if downloadImages:
     if model_day2:
       print("... Downloading UofDavis model precipitation map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2+24)+'hr.d02.png'
-        dl = downloadLink(url, saveDir + 'ucdavis_precip_day2_anim_' + '{:02d}'.format(frame) + '.png')
+        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today_m.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2+24)+'hr.d02.png'
+        dl = downloadLink(url, os.path.join(saveDir,'ucdavis_precip_day2_anim_' + '{:02d}'.format(frame) + '.png'))
         count_good_links += dl
         count_bad_links += (1 - dl)
         status.append(dl)
@@ -628,7 +630,7 @@ if downloadImages:
     dTime = int((datetime.strptime(download_days[0], '%Y%m%d%H') - (today-timedelta(days=1))).total_seconds()/3600)
     url = url_base + download_days[0] + '_f' + '{:03d}'.format(dTime) + '_total_aod_550_subtropatl_icap.png'
 
-    dl = downloadLink(url, saveDir + 'ICAP_aerosol_ensemble_' + str(dTime) + '.png')
+    dl = downloadLink(url, os.path.join(saveDir,'ICAP_aerosol_ensemble_' + str(dTime) + '.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -638,7 +640,7 @@ if downloadImages:
     dTime = int((datetime.strptime(download_days[1], '%Y%m%d%H') - (today-timedelta(days=1))).total_seconds()/3600)
     url = url_base + download_days[1] + '_f' + '{:03d}'.format(dTime) + '_total_aod_550_subtropatl_icap.png'
 
-    dl = downloadLink(url, saveDir + 'ICAP_aerosol_ensemble_' + str(dTime) + '.png')
+    dl = downloadLink(url, os.path.join(saveDir,'ICAP_aerosol_ensemble_' + str(dTime) + '.png'))
     count_good_links += dl
     count_bad_links += (1 - dl)
     status.append(dl)
@@ -661,9 +663,9 @@ if downloadImages:
         url_base = 'https://www.tropicaltidbits.com/analysis/models/ecmwf/' + (today).strftime('%Y%m%d')+'00/ecmwf_'
 
         if vv == 'mslp_pcpn':
-            if idx > 0: dl = downloadLink(url_base+vv+'_atl_'+str(idx)+'.png', saveDir + 'ECMWF_'+vv+'_'+ECMWF_files[idx])
+            if idx > 0: dl = downloadLink(url_base+vv+'_atl_'+str(idx)+'.png', os.path.join(saveDir,'ECMWF_'+vv+'_'+ECMWF_files[idx]))
         else:
-            dl = downloadLink(url_base+vv+'_nafr_'+str(idx+1+24)+'.png', saveDir + 'ECMWF_'+vv+'_'+ECMWF_files[idx])
+            dl = downloadLink(url_base+vv+'_nafr_'+str(idx+1+24)+'.png', os.path.join(saveDir,'ECMWF_'+vv+'_'+ECMWF_files[idx]))
 
         count_good_links += dl
         count_bad_links += (1 - dl)
@@ -747,7 +749,7 @@ if downloadImages:
       AOT_page = AOT_url_prefix + 'tau=' + tau + AOT_url_suffix + '&field=duaot'
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
-      dl = downloadLink(AOT_img_url, saveDir + AOT_img_2D_files[idx])
+      dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_2D_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -759,7 +761,7 @@ if downloadImages:
       AOT_page = AOT_url_prefix + 'tau=' + tau + AOT_url_suffix + '&field=totaot'
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
-      dl = downloadLink(AOT_img_url, saveDir + AOT_img_total_files[idx])
+      dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_total_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -774,7 +776,7 @@ if downloadImages:
       cldfra_img_url = find_geos_img_url(cldfra_page, img_url_pattern, req_timeout)
 
 
-      dl = downloadLink(cldfra_img_url, saveDir + AOT_img_lowcf_files[idx])
+      dl = downloadLink(cldfra_img_url, os.path.join(saveDir,AOT_img_lowcf_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -788,7 +790,7 @@ if downloadImages:
       cldfra_img_url = find_geos_img_url(cldfra_page, img_url_pattern, req_timeout)
 
 
-      dl = downloadLink(cldfra_img_url, saveDir + AOT_img_midcf_files[idx])
+      dl = downloadLink(cldfra_img_url, os.path.join(saveDir,AOT_img_midcf_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -802,7 +804,7 @@ if downloadImages:
       cldfra_img_url = find_geos_img_url(cldfra_page, img_url_pattern, req_timeout)
 
 
-      dl = downloadLink(cldfra_img_url, saveDir + AOT_img_highcf_files[idx])
+      dl = downloadLink(cldfra_img_url, os.path.join(saveDir,AOT_img_highcf_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -816,7 +818,7 @@ if downloadImages:
       AOT_page =  AOT_page + 'tau=' + tau + AOT_url_suffix + '&field=du_w2'
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
-      dl = downloadLink(AOT_img_url, saveDir + AOT_img_loncs_files[idx])
+      dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_loncs_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)
@@ -828,7 +830,7 @@ if downloadImages:
       AOT_page =  AOT_page + 'tau=' + tau + AOT_url_suffix + '&field=du_n1'
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
-      dl = downloadLink(AOT_img_url, saveDir + AOT_img_latcs_files[idx])
+      dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_latcs_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)

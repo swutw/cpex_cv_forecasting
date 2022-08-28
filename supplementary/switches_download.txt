@@ -24,4 +24,4 @@ uwincm_surfaceWind_animation = True
 
 uutah_precipitation = True
 uutah_precipitation_animation = True
-ucdavis_precipitation_animation = False
+ucdavis_precipitation_animation = True

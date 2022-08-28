@@ -16,6 +16,7 @@ Updates:
  - 2021-07-15: Trimmed the new CPEX-AW 2021 logo. Merged the Meteosat-11 and GOES-16 satellite imagery for a view of the Tropical Atlantic.
  - 2021-07-26: Added total AOT to files moved to ./figs_final/.
 """
+
 import os
 import subprocess
 import time
@@ -29,10 +30,10 @@ moveFinalImages = True
 
 model_day1 = model_day2 = True
 
-forecastDir = './'
-saveDir = './figs/'
-cropDir = './figs_cropped/'
-finDir = './figs_final/'
+forecastDir = os.getcwd()
+saveDir = os.path.join('.','figs')
+cropDir = os.path.join('.','figs_cropped')
+finDir  = os.path.join('.','figs_final')
 
 
 
@@ -57,7 +58,7 @@ def persistLastImage(fileDir, imageNameRoot, nDup=3):
     working = True
     frame_num = [int(el[-6:-4]) for el in fls]
     for fl in range(nDup):
-      cmd = ['cp', fileDir+imageNameRoot+'{:02d}'.format(frame_num[-1])+fls[-1][-4:], fileDir+imageNameRoot+'{:02d}'.format(frame_num[-1]+fl+1)+fls[-1][-4:]]
+      cmd = ['cp', os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1])+fls[-1][-4:]), os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1]+fl+1)+fls[-1][-4:]) ]
       subprocess.call(cmd)
   else:
     working = False
@@ -78,7 +79,7 @@ def createAnimation(fileDir, imageNameRoot, outName, delay=50, loop=0):
   - delay: delay in ms
   - loop: 0 means repeating
   """
-  cmd = ['convert', '-delay', str(delay), fileDir+imageNameRoot+'*', '-loop', str(loop), '+repage', fileDir+outName]
+  cmd = ['convert', '-delay', str(delay), os.path.join(fileDir,imageNameRoot+'*'), '-loop', str(loop), '+repage', os.path.join(fileDir,outName) ]
   subprocess.call(cmd)
 
   return
@@ -113,13 +114,13 @@ if clearDirectory:
   print('Removing existing files.')
   existing_files = [el for el in sorted(os.listdir(cropDir)) if 'logo_cpexcv.png' not in el]
   for fl in existing_files:
-    os.remove(cropDir+fl)
+    os.remove( os.path.join(cropDir,fl) )
 
   print('Copying over CPEX-CV logo.')
   fls = os.listdir(saveDir)
-  cmd = ['cp', saveDir+'logo_cpexcv.png', cropDir+'logo_cpexcv.png']
+  cmd = ['cp', os.path.join(saveDir,'logo_cpexcv.png'), os.path.join(cropDir,'logo_cpexcv.png') ]
   subprocess.call(cmd)
-  cmd = ['convert', cropDir+'logo_cpexcv.png', '-trim',  '-border',  '0',  '+repage', cropDir+'logo_cpexcv.png']
+  cmd = ['convert', os.path.join(cropDir,'logo_cpexcv.png'), '-trim',  '-border',  '0',  '+repage', os.path.join(cropDir,'logo_cpexcv.png')]
   subprocess.call(cmd)
   print('Removing existing files complete.')
 
@@ -134,7 +135,7 @@ print('')
 
 if readSwitches:
   print("Reading True/False switches from switches_process.txt")
-  fl = open(forecastDir + './supplementary/switches_process.txt', 'r')
+  fl = open( os.path.join(forecastDir,'supplementary','switches_process.txt'), 'r')
   data = fl.readlines()
   fl.close()
   data = [line.rstrip() for line in data]
@@ -170,23 +171,23 @@ if processImages:
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '1268x648+1100+350', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '1268x648+1100+350', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
       xPt, yPt = 952, 445
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
     current_files = [el for el in all_files if 'NHC_' in el and 'surface_analysis' not in el]
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '900x665+0+0', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '900x665+0+0', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 775, 445
-      cmd = ['convert', cropDir+fl, '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -196,17 +197,17 @@ if processImages:
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '990x452+8+18', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '990x452+8+18', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 665, 323
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
     current_files_subset = [el for el in current_files if 'animation-' in el]
     frame_number = [int(el.split('-')[-1].split('.')[0]) for el in current_files_subset]
     for num, fl in enumerate(current_files_subset):
-      os.rename(cropDir+fl, cropDir+fl[:24]+'{:02d}'.format(frame_number[num])+fl[-4:])
+      os.rename(os.path.join(cropDir,fl), os.path.join(cropDir,fl[:24]+'{:02d}'.format(frame_number[num])+fl[-4:]))
 
 
 
@@ -216,11 +217,11 @@ if processImages:
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '990x388+10+0', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '990x388+10+0', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 662, 243
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -231,24 +232,24 @@ if processImages:
 
     marker_radius = 6
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '1312x780+230+0', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '1312x780+230+0', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 1120, 488
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       # # # crop off the color bar
-      cmd = ['convert', saveDir+fl, '-crop', '682x38+430+782', '+repage', cropDir+fl[:-4]+'_cbar'+fl[-4:]]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '682x38+430+782', '+repage', os.path.join(cropDir,fl[:-4]+'_cbar'+fl[-4:])]
       subprocess.call(cmd)
 
       # # # resize color bar
-      cmd = ['convert', cropDir+fl[:-4]+'_cbar'+fl[-4:], '-resize', '1312x73', '+repage', cropDir+fl[:-4]+'_cbar'+fl[-4:]]
+      cmd = ['convert', os.path.join(cropDir,fl[:-4]+'_cbar'+fl[-4:]), '-resize', '1312x73', '+repage', os.path.join(cropDir,fl[:-4]+'_cbar'+fl[-4:]) ]
       subprocess.call(cmd)
 
       print('      ... Adding a larger version of the color bar.')
       # # # join original image and larger color bar together
-      cmd = ['convert', cropDir+fl, cropDir+fl[:-4]+'_cbar'+fl[-4:], '-append', cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), os.path.join(cropDir,fl[:-4]+'_cbar'+fl[-4:]), '-append', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -260,48 +261,48 @@ if processImages:
     #xPt, yPt = 600, 675
     xPt, yPt = 850, 910
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '3000x2000+0+0', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '3000x2000+0+0', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
-      cmd = ['convert', cropDir+fl, '-fill', 'magenta', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'magenta', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       if 'IRC' in fl:
         print('      ... Color IR - adding Celsius color scale on side.')
         #cmd = []
-        cmd = ['convert', cropDir+fl, '-resize', '3100x2000', '-background', 'white', '-gravity', 'west', '-extent', '3100x2000', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-resize', '3100x2000', '-background', 'white', '-gravity', 'west', '-extent', '3100x2000', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         # this will add a  color scale
 
         xPtT, yPtT = 3000, 1775
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-110', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-110', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 1577
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-90', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-90', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 1395
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-70', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-70', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 1215
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-50', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-50', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 1035
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-30', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-30', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 855
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-10', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-10', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 675
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 10', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 10', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 495
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 30', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 30', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 315
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 50', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 50', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 3000, 245
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), 'ºC', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), 'ºC', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
 
 
@@ -313,56 +314,56 @@ if processImages:
     for fl in current_files:
       if ('IRC' or 'RGB') in fl:
         xPt, yPt = 1340, 940
-        cmd = ['convert', saveDir+fl, '-crop', '2000x2000+0+0', '+repage', cropDir+fl]
+        cmd = ['convert', os.path.join(saveDir,fl), '-crop', '2000x2000+0+0', '+repage', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
 
-        cmd = ['convert', cropDir+fl, '-fill', 'magenta', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'magenta', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
         subprocess.call(cmd)
 
       elif 'VIS' in fl:
         xPt, yPt = 940, 1560
-        cmd = ['convert', saveDir+fl, '-crop', '3712x3700+0+0', '+repage', cropDir+fl]
+        cmd = ['convert', os.path.join(saveDir,fl), '-crop', '3712x3700+0+0', '+repage', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
 
-        cmd = ['convert', cropDir+fl, '-fill', 'magenta', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius*2) + ',' + str(yPt+marker_radius*2), cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'magenta', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius*2) + ',' + str(yPt+marker_radius*2), os.path.join(cropDir,fl)]
         subprocess.call(cmd)
 
       if 'IRC' in fl:
         print('      ... Color IR - adding Celsius color scale on side.')
         #cmd = []
-        cmd = ['convert', cropDir+fl, '-resize', '2100x2000', '-background', 'white', '-gravity', 'west', '-extent', '2100x2000', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-resize', '2100x2000', '-background', 'white', '-gravity', 'west', '-extent', '2100x2000', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         # this will add a  color scale
 
         xPtT, yPtT = 2000, 1775
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-110', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-110', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 1577
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-90', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-90', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 1395
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-70', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-70', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 1215
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-50', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-50', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 1035
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-30', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-30', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 855
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-10', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), '-10', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 675
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 10', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 10', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 495
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 30', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 30', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 315
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 50', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), ' 50', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
         xPtT, yPtT = 2000, 245
-        cmd = ['convert', cropDir+fl, '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), 'ºC', cropDir+fl]
+        cmd = ['convert', os.path.join(cropDir,fl), '-pointsize', '50', '-annotate', '+' + str(xPtT) + '+' + str(yPtT), 'ºC', os.path.join(cropDir,fl)]
         subprocess.call(cmd)
 
 
@@ -377,17 +378,17 @@ if processImages:
     currentInd_goes = current_files_goes.index([fl for fl in current_files_goes if '_IRC.' in fl][0])
 
     # 1. crop off the color bar off of GOES16
-    cmd = ['convert', cropDir+current_files_goes[currentInd_goes], '-crop', '502x2000+0+0', '+repage', cropDir+'temp1.png']
+    cmd = ['convert', os.path.join(cropDir,current_files_goes[currentInd_goes]), '-crop', '502x2000+0+0', '+repage', os.path.join(cropDir,'temp1.png')]
     subprocess.call(cmd)
 
     # 2. merge met file with goes file
-    cmd = ['convert', cropDir+'temp1.png', cropDir+current_files_met[currentInd_met], '+append', '+repage', cropDir+fileName]
+    cmd = ['convert', os.path.join(cropDir,'temp1.png'), os.path.join(cropDir,current_files_met[currentInd_met]), '+append', '+repage', os.path.join(cropDir,fileName)]
     subprocess.call(cmd)
 
 
     current_fls = [fl for fl in os.listdir(cropDir) if 'temp' in fl and '.png' in fl]
     for fl in current_fls:
-      cmd = ['rm', cropDir+fl]
+      cmd = ['rm', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -398,7 +399,7 @@ if processImages:
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x450+25+110', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '740x450+25+110', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       # cape verde
@@ -406,7 +407,7 @@ if processImages:
 #       xPt, yPt = 615, 180
 #       #smallerD02 - 08-19
       xPt, yPt = 448, 172
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -417,11 +418,11 @@ if processImages:
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x450+25+110', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '740x450+25+110', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 454, 171
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -433,12 +434,12 @@ if processImages:
     marker_radius = 5
 
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x500+25+110', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '740x500+25+110', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       # Cape Verde
       xPt, yPt = 454, 171
-      cmd = ['convert', cropDir+fl, '-fill', 'black', '-stroke', 'red', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'black', '-stroke', 'red', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -449,12 +450,12 @@ if processImages:
 
     marker_radius = 5
     for fl in current_files:
-      #cmd = ['convert', saveDir+fl, '-crop', '800x500+0+0', '+repage', cropDir+fl]
-      cmd = ['cp', saveDir+fl, cropDir+fl]
+      #cmd = ['convert', os.path.join(saveDir,fl), '-crop', '800x500+0+0', '+repage', os.path.join(cropDir,fl)]
+      cmd = ['cp', os.path.join(saveDir,fl), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 452, 187
-      cmd = ['convert', cropDir+fl, '-fill', 'black', '-stroke', 'red', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'black', '-stroke', 'red', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -465,12 +466,12 @@ if processImages:
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x450+30+85', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '740x450+30+85', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       # cape verde
       xPt, yPt = 542, 234
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -480,12 +481,12 @@ if processImages:
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '740x450+30+85', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '740x450+30+85', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       # cape verde
       xPt, yPt = 542, 234
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'white', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'white', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -496,11 +497,11 @@ if processImages:
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '825x530+80+85', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '825x530+80+85', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 490, 334
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -511,11 +512,11 @@ if processImages:
 
     marker_radius = 4
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '971x547+0+0', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '971x547+0+0', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 235, 325
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -523,12 +524,12 @@ if processImages:
 
     marker_radius = 4
     for fl in current_files:
-      #cmd = ['convert', saveDir+fl, '-crop', '825x530+80+85', '+repage', cropDir+fl]
-      cmd = ['cp', saveDir+fl, cropDir+fl]
+      #cmd = ['convert', os.path.join(saveDir,fl), '-crop', '825x530+80+85', '+repage', os.path.join(cropDir,fl)]
+      cmd = ['cp', os.path.join(saveDir,fl), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 235, 325
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -538,11 +539,11 @@ if processImages:
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '984x688+0+80', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '984x688+0+80', '+repage', os.path.join(cropDir,fl)]
       #subprocess.call(cmd)
 
       xPt, yPt = 685, 335
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       #subprocess.call(cmd)
 
 
@@ -550,15 +551,15 @@ if processImages:
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '984x688+0+80', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '984x688+0+80', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 360, 325
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       #subprocess.call(cmd)
 
       xPt, yPt = 685, 335
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -567,11 +568,11 @@ if processImages:
     marker_radius = 8
     xPt, yPt = 385, 619
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '1021x654+2+57', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '1021x654+2+57', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 750, 619
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -579,11 +580,11 @@ if processImages:
 
     marker_radius = 8
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '1019x681+0+57', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '1019x681+0+57', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 495, 619
-      cmd = ['convert', cropDir+fl, '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'white', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -591,22 +592,22 @@ if processImages:
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '984x688+0+80', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '984x688+0+80', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 685, 335
-      cmd = ['convert', cropDir+fl, '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'blue', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
     current_files = sorted([el for el in all_files if ('GEOS_' in el) and ('CloudFraction' in el)])
 
     marker_radius = 5
     for fl in current_files:
-      cmd = ['convert', saveDir+fl, '-crop', '984x688+0+80', '+repage', cropDir+fl]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '984x688+0+80', '+repage', os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
       xPt, yPt = 685, 335
-      cmd = ['convert', cropDir+fl, '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), cropDir+fl]
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
       subprocess.call(cmd)
 
 
@@ -631,7 +632,7 @@ if joinSlideAnimations:
       fls_right = sorted([el for el in os.listdir(cropDir) if 'ECMWF_z850' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'ECMWF_outlook_day3_anim_' + '{:02d}'.format(num) + '.jpg']
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'ECMWF_outlook_day3_anim_' + '{:02d}'.format(num) + '.jpg')]
           subprocess.call(cmd)
       else:
         print('... ... The numbers of images for fields do not match.')
@@ -648,7 +649,7 @@ if joinSlideAnimations:
       fls_right = sorted([el for el in os.listdir(cropDir) if 'uwincm_650mbRH_day1_anim' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'uwincm_joint_surfaceWind_650mbRH_day1_anim_' + '{:02d}'.format(num) + '.jpg']
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_surfaceWind_650mbRH_day1_anim_' + '{:02d}'.format(num) + '.jpg')]
           subprocess.call(cmd)
       else:
         print('... ... The numbers of images for fields do not match.')
@@ -664,7 +665,7 @@ if joinSlideAnimations:
       fls_right = sorted([el for el in os.listdir(cropDir) if 'uwincm_650mbRH_day2_anim' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'uwincm_joint_surfaceWind_650mbRH_day2_anim_' + '{:02d}'.format(num) + '.jpg']
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_surfaceWind_650mbRH_day2_anim_' + '{:02d}'.format(num) + '.jpg')]
           subprocess.call(cmd)
       else:
         print('... ... The numbers of images for fields do not match.')
@@ -681,7 +682,7 @@ if joinSlideAnimations:
       fls_right = sorted([el for el in os.listdir(cropDir) if 'uwincm_boundaryLayer_day1_anim' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'uwincm_joint_clouds_boundaryLayer_day1_anim_' + '{:02d}'.format(num) + '.jpg']
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_clouds_boundaryLayer_day1_anim_' + '{:02d}'.format(num) + '.jpg')]
           subprocess.call(cmd)
       else:
         print('... ... The numbers of images for fields do not match.')
@@ -696,7 +697,7 @@ if joinSlideAnimations:
       fls_right = sorted([el for el in os.listdir(cropDir) if 'uwincm_boundaryLayer_day2_anim' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'uwincm_joint_clouds_boundaryLayer_day2_anim_' + '{:02d}'.format(num) + '.jpg']
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_clouds_boundaryLayer_day2_anim_' + '{:02d}'.format(num) + '.jpg')]
           subprocess.call(cmd)
       else:
         print('... ... The numbers of images for fields do not match.')
@@ -713,7 +714,7 @@ if joinSlideAnimations:
       fls_right = sorted([el for el in os.listdir(cropDir) if 'uutah_precip_day1_anim' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'uwincm_joint_precip_day1_anim_' + '{:02d}'.format(num) + '.jpg']
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_precip_day1_anim_' + '{:02d}'.format(num) + '.jpg')]
           subprocess.call(cmd)
       else:
         print('... ... The numbers of images for fields do not match.')
@@ -727,7 +728,7 @@ if joinSlideAnimations:
       fls_right = sorted([el for el in os.listdir(cropDir) if 'uutah_precip_day2_anim' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
-          cmd = ['convert', '+append', cropDir+fl, cropDir+fls_right[num], cropDir+'uwincm_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg']
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg')]
           subprocess.call(cmd)
       else:
         print('... ... The numbers of images for fields do not match.')
@@ -792,8 +793,8 @@ if moveFinalImages:
     # 'AEW_Brammer.jpg'
 
   for fl in list_of_images:
-    if os.path.isfile(cropDir+fl):
-      os.system('cp ' + cropDir+fl + ' ' + finDir+fl)
+    if os.path.isfile(os.path.join(cropDir,fl)):
+      os.system('cp ' + os.path.join(cropDir,fl) + ' ' + os.path.join(finDir,fl))
     else:
       print('... ... ' + fl + ' not present and cannot be copied over.')
 
@@ -841,12 +842,12 @@ if moveFinalImages:
                     ]
 
   for fl, fl_r in zip(list_of_images, rename_of_images):
-      if os.path.isfile(finDir+fl):
-        os.system('mv ' + finDir+fl + ' ' + finDir+fl_r)
+      if os.path.isfile( os.path.join(finDir,fl) ):
+        os.system('mv ' + os.path.join(finDir,fl) + ' ' + os.path.join(finDir,fl_r) )
       else:
         print('... ... ' + fl + ' not present and cannot be copied over.')
 
   #GEOS_dust_aot.png is used twice in the slide
-  cmd = ['cp', finDir+'GEOS_dust_aot.png', finDir+'12_GEOS_dust_aot.png']
+  os.system( 'cp ' + os.path.join(finDir,'04_GEOS_dust_aot.png') + ' ' + os.path.join(finDir,'12_GEOS_dust_aot.png') )
 
   print('Rename final images and animations complete.')
