@@ -56,8 +56,8 @@ finDir  = os.path.join('.','figs_final')
 
 
 
-#today = datetime.today()
-today = datetime.strptime('2022-08-26', '%Y-%m-%d')
+today = datetime.today()
+#today = datetime.strptime('2022-08-26', '%Y-%m-%d')
 today = today.replace(hour=0, minute=0, second=0, microsecond=0)
 today_m = today - timedelta(days=1)
 yesterday = today - timedelta(days=1)
@@ -618,6 +618,22 @@ if downloadImages:
     write_switch('ucdavis_precipitation_animation', status, fl_switch)
 
 
+  if switches['UTAH_website']:
+      print("... Downloading UofUtah model precipitation map from UTAH website.")
+      status = []
+      vv = 'slp_rain'
+      dd = 'd02'
+      for frame in range(12):
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today_m.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day1_anim_' + '{:02d}'.format(frame) + '.png'))
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today_m.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day2_anim_' + '{:02d}'.format(frame) + '.png'))
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+
+      write_switch('UTAH_website', status, fl_switch)
+
   # NOW BACK TO OBSERVATIONS - ICAP
   if switches['icap_aerosol_ensemble']:
     print("... Downloading ICAP AOT ensemble mean maps for day 3.")
@@ -717,6 +733,21 @@ if downloadImages:
                            'GEOS_dust_aot_day1_vert_' + str(dust_xLat) + 'W.png',
                            'GEOS_dust_aot_day2_vert_' + str(dust_xLat) + 'W.png']
 
+    #=== 700mb wind & geopotential height config
+    wind_700mb_tau = ['072', '078', '084', '090', '096', '102', '108', '114', '120', '126', '132', '138']
+
+    wind_700mb_files = ['GEOS_700mb_outlook_anim_00.png',
+                        'GEOS_700mb_outlook_anim_01.png',
+                        'GEOS_700mb_outlook_anim_02.png',
+                        'GEOS_700mb_outlook_anim_03.png',
+                        'GEOS_700mb_outlook_anim_04.png',
+                        'GEOS_700mb_outlook_anim_05.png',
+                        'GEOS_700mb_outlook_anim_06.png',
+                        'GEOS_700mb_outlook_anim_07.png',
+                        'GEOS_700mb_outlook_anim_08.png',
+                        'GEOS_700mb_outlook_anim_09.png',
+                        'GEOS_700mb_outlook_anim_10.png',
+                        'GEOS_700mb_outlook_anim_11.png']
 
 
     def find_geos_img_url(webpage,text_pattern,timeout):
@@ -831,6 +862,19 @@ if downloadImages:
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
       dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_latcs_files[idx]))
+      count_good_links += dl
+      count_bad_links += (1 - dl)
+      status.append(dl)
+
+    #Get 700 mb wind with geopotential heights
+    print("... Downloading images from GEOS - 700 mb wind and Geopotential heights.")
+    for idx, tau in enumerate(wind_700mb_tau):
+      wind700mb_prefix = AOT_url_prefix.replace('chem2d_mission', 'weather_mission')
+      wind700mb_suffix = AOT_url_suffix.replace('level=0','level=700')
+      wind700mb_page = wind700mb_prefix + 'tau=' + tau + wind700mb_suffix + '&field=wspd'
+      wind700m_img_url = find_geos_img_url(wind700mb_page, img_url_pattern, req_timeout)
+
+      dl = downloadLink(wind700m_img_url, os.path.join(saveDir,wind_700mb_files[idx]))
       count_good_links += dl
       count_bad_links += (1 - dl)
       status.append(dl)

@@ -1,10 +1,15 @@
 """
 Author: Ajda Savarin
-Created: July 12th 2020
+Created: July 04th 2020
 University of Washington
 asavarin@uw.edu
 
-This program is used to crop images downloaded with download_daily_images and draw the Sal Island marker on them.
+Author: Shun-Nan Wu
+Modified: July 01 2022
+University of Oklahoma
+swu@ou.edu
+
+This program is used to retrieve images for the CPEX-AW and CPEX-CV field campaign forecasting template.
 
 Required packages: os, subprocess, time.
 
@@ -15,6 +20,8 @@ Updates:
  - 2021-07-13: For satellite imagery, included Meteosat, GOES-16 cropped to St. Croix, and the Tropical Atlantic GOES-16. Also added the NHC tropical weather outlook figures for 2 and  5 days ahead. Included marked locations for both Sal Island and St Croix where applicable.
  - 2021-07-15: Trimmed the new CPEX-AW 2021 logo. Merged the Meteosat-11 and GOES-16 satellite imagery for a view of the Tropical Atlantic.
  - 2021-07-26: Added total AOT to files moved to ./figs_final/.
+ - 2022-08-20: Changing the highlight point to Sal island
+ - 2022-08-27: Adopt to all operating systems
 """
 
 import os
@@ -444,7 +451,7 @@ if processImages:
 
 
 
-  if switches['uutah_precipitation'] or switches['uutah_precipitation_animation']:
+  if switches['uutah_precipitation'] or switches['uutah_precipitation_animation'] or switches['UTAH_website']:
     print('   ... Unversity of Utah - precipitation - cropping image and adding Sal location.')
     current_files = sorted([el for el in all_files if 'uutah_precip' in el])
 
@@ -540,11 +547,11 @@ if processImages:
     marker_radius = 5
     for fl in current_files:
       cmd = ['convert', os.path.join(saveDir,fl), '-crop', '984x688+0+80', '+repage', os.path.join(cropDir,fl)]
-      #subprocess.call(cmd)
+      subprocess.call(cmd)
 
       xPt, yPt = 685, 335
       cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', 'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius), os.path.join(cropDir,fl)]
-      #subprocess.call(cmd)
+      subprocess.call(cmd)
 
 
     current_files = sorted([el for el in all_files if ('GEOS_dust' in el) and ('vert' not in el)])
@@ -706,7 +713,7 @@ if joinSlideAnimations:
       animationSteps(cropDir, 'uwincm_joint_clouds_boundaryLayer_day2_anim_', 'uwincm_joint_clouds_boundaryLayer_day2_movie.gif')
 
 
-  if switches['uwincm_precipitation_animation'] and switches['uutah_precipitation_animation']:
+  if (switches['uwincm_precipitation_animation'] and switches['uutah_precipitation_animation']) or (switches['uwincm_precipitation_animation'] and switches['UTAH_website']):
 
     if model_day1:
       print('... UWINCM precipitation and U of Utah precipitation - model day 1.')
@@ -786,7 +793,8 @@ if moveFinalImages:
                     'GEOS_highCloudFraction_day2.png',
                     'ICAP_aerosol_ensemble_96.png',
                     'ICAP_aerosol_ensemble_120.png',
-                    'ECMWF_outlook_day3.gif',
+                    'GEOS_700mb_outlook_movie.gif',
+                    'ECMWF_outlook_day3.gif'
                     ]
 
     # additional images, when they become available:
@@ -838,7 +846,8 @@ if moveFinalImages:
                     '15_GEOS_highCloudFraction_day2.png',
                     '16_ICAP_aerosol_ensemble_96.png',
                     '16_ICAP_aerosol_ensemble_120.png',
-                    '17_ECMWF_outlook_day3.gif',
+                    '17_GEOS_700mb_outlook_movie.gif',
+                    '18_ECMWF_outlook_day3.gif'
                     ]
 
   for fl, fl_r in zip(list_of_images, rename_of_images):

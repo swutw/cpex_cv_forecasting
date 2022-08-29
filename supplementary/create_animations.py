@@ -1,10 +1,15 @@
 """
 Author: Ajda Savarin
-Created: July 19th 2021
+Created: July 04th 2020
 University of Washington
 asavarin@uw.edu
 
-This program is used to create base animations for the CPEX-AW Forecasting team.
+Author: Shun-Nan Wu
+Modified: July 01 2022
+University of Oklahoma
+swu@ou.edu
+
+This program is used to retrieve images for the CPEX-AW and CPEX-CV field campaign forecasting template.
 
 Required packages: os, subprocess, time.
 
@@ -229,6 +234,13 @@ if createAnimations:
       if model_day2:
         print('... UofUtah precipitation - model day 2')
         animationSteps(saveDir, 'uutah_precip_day2_anim_', 'uutah_precip_day2_movie.gif')
+
+
+  if switches['nasa_geos']:
+    print('... NASA GEOS 700mb winds')
+    current_fls = [fl for fl in present_files_animation if 'GEOS_700mb_outlook_anim_' in fl]
+    if len(current_fls) == 12:
+      animationSteps(saveDir, 'GEOS_700mb_outlook_anim_', 'GEOS_700mb_outlook_movie.gif')
 
 
   if switches['ECMWF_prediction']:

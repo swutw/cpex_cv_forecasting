@@ -1,15 +1,17 @@
+"""
+Author: Shun-Nan Wu
+Created: Aug. 27 2022
+University of Oklahoma
+swu@ou.edu
+
+This python script will combine a bunch of steps (true/false switches) in creating the forecast template.
+Things you will need to change after downloading this to your computer:
+  - change true/false switches according to what you want executed
+  - change true/false switched_download.txt according to what you want to download
+"""
+
 import os
 import subprocess
-#!/bin/bash
-# Author: Shun-Nan Wu
-# Created: Aug. 27 2022
-# University of Oklahoma
-# swu@ou.edu
-#
-# This python script will combine a bunch of steps (true/false switches) in creating the forecast template.
-# Things you will need to change after downloading this to your computer:
-#      - change true/false switches accoring to what you want executed
-#
 
 
 change_work_dir=True

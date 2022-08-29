@@ -28,10 +28,11 @@ Google Drive slides for forecasting template: https://docs.google.com/presentati
 (This won't work unless your manual steps work.)
  - Before you run them for the first time, you will need to make the files executable (on Mac/Linux: chmod +x run_forecast_scripts.sh)
 
-1. **./run_forecast_scripts.sh** will run all the steps in the manual section **BUT**
+1. **python ./run_forecast_scripts.py** will run all the steps in the manual section **BUT**
 
  - You will need to open it up and edit a few things (instructions at the top of the .sh file)
-    - Decide on steps you need to run for true/false switches. Best to keep 1-5 true.
+    - Decide on steps you need to run for true/false switches.
+    - Change true/false _switched_download.txt_ according to what you want to download
 
 -------------------------------------------
 # Steps for manually downloading the figures
@@ -58,7 +59,7 @@ This will:
 4. Crop, process, and annotate downloaded images: **python ./supplementary/crop_edit_daily_images.py**
 
 This reads in _switches_process.txt_ that was created in 2. It's automatic, so no need for any changes. It:
-    - adds the locations of St. Croix and Sal wherever applicable.
+    - adds the locations of Sal wherever applicable.
     - crops images.
     - joins images together for animations.
     - creates final animations.
