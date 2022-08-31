@@ -105,11 +105,12 @@ As you add each new link, the empty figure should be replaced with what it is be
 
 2. The joint precipitation animations are not created. What should I do?
 - Always Check if the products exist on the source website first!
-- Sometimes there is a data transfer issue between UW and UTAH, so check if UTAH website produces figures. If yes, set "uutah_precipitation = False" and "UTAH_website = False" in _switches_download.txt_
+- Sometimes there is a data transfer issue between UW and UTAH, so check if UTAH website produces figures. If yes, set "uutah_precipitation = False" and "UTAH_website = True" in _switches_download.txt_
 - Execute the script again.
 
 
 3. The script stuck at downloading GEOS_forecasing information. What should I do?
 - Always Check if the products exist on the source website first!
 - In the most of time, you'll get them downloaded on your second try.
+- If the script stops at downloading the cross section set "nasa_geos_cross_section = False" in _switches_download.txt_
 - If the script still can't run through smoothly, set "nasa_geos = False" in _switches_download.txt_

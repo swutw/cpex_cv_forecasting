@@ -624,9 +624,9 @@ if downloadImages:
       vv = 'slp_rain'
       dd = 'd02'
       for frame in range(12):
-        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today_m.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today_m.strftime('%Y-%m-%d') + '_12/' + vv + '-' + (forecast_day1+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
         dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day1_anim_' + '{:02d}'.format(frame) + '.png'))
-        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today_m.strftime('%Y-%m-%d') + '_00/' + vv + '-' + (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
+        url = 'https://home.chpc.utah.edu/~pu/cpexaw/png/' + today_m.strftime('%Y-%m-%d') + '_12/' + vv + '-' + (forecast_day2+timedelta(hours=1) + timedelta(hours=2*frame)).strftime('%Y-%m-%d_%H:%M:%S') + '_'+dd+'.png'
         dl = downloadLink(url, os.path.join(saveDir,'uutah_precip_day2_anim_' + '{:02d}'.format(frame) + '.png'))
         count_good_links += dl
         count_bad_links += (1 - dl)
@@ -693,12 +693,12 @@ if downloadImages:
 
   # NASA geos dust simulations
   if switches['nasa_geos']:
-    fInitialTime = today.strftime('%Y%m%d') + 'T000000'
+    fInitialTime = today_m.strftime('%Y%m%d') + 'T120000'
     img_url_pattern = '/missions/static//plots/'
     req_timeout = 300 #seconds
 
     #=== Aerosol optical thickness config
-    AOT_tau = ['000', '024', '048'] #Change tau to choose different lead hour
+    AOT_tau = ['012', '036', '060'] #Change tau to choose different lead hour
 
     AOT_url_prefix = 'https://fluid.nccs.nasa.gov/missions/chem2d_mission%2BPRDUST/?one_click=1&'
     AOT_url_suffix = '&stream=G5FPFC&level=0&region=prdust&fcst=' + fInitialTime
@@ -734,7 +734,8 @@ if downloadImages:
                            'GEOS_dust_aot_day2_vert_' + str(dust_xLat) + 'W.png']
 
     #=== 700mb wind & geopotential height config
-    wind_700mb_tau = ['072', '078', '084', '090', '096', '102', '108', '114', '120', '126', '132', '138']
+    #wind_700mb_tau = ['072', '078', '084', '090', '096', '102', '108', '114', '120', '126', '132', '138']
+    wind_700mb_tau = ['084', '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', ]
 
     wind_700mb_files = ['GEOS_700mb_outlook_anim_00.png',
                         'GEOS_700mb_outlook_anim_01.png',
@@ -778,7 +779,9 @@ if downloadImages:
 
     for idx, tau in enumerate(AOT_tau):
       AOT_page = AOT_url_prefix + 'tau=' + tau + AOT_url_suffix + '&field=duaot'
+      #print(AOT_page)
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
+      #print(AOT_img_url)
 
       dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_2D_files[idx]))
       count_good_links += dl
@@ -843,28 +846,29 @@ if downloadImages:
 
 
     #Get AOT longitudinal cross section
-    print("... Downloading images from GEOS - Aerosol Opt. Thickness - Lon Cross section.")
-    for idx, tau in enumerate(AOT_tau):
-      AOT_page = AOT_url_prefix.replace('chem2d_mission', 'custom_mission')
-      AOT_page =  AOT_page + 'tau=' + tau + AOT_url_suffix + '&field=du_w2'
-      AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
+    if switches['nasa_geos_cross_section']:
+      print("... Downloading images from GEOS - Aerosol Opt. Thickness - Lon Cross section.")
+      for idx, tau in enumerate(AOT_tau):
+        AOT_page = AOT_url_prefix.replace('chem2d_mission', 'custom_mission')
+        AOT_page =  AOT_page + 'tau=' + tau + AOT_url_suffix + '&field=du_w2'
+        AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
-      dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_loncs_files[idx]))
-      count_good_links += dl
-      count_bad_links += (1 - dl)
-      status.append(dl)
+        dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_loncs_files[idx]))
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
 
-    #Get AOT latitudinal cross section image
-    print("... Downloading images from GEOS - Aerosol Opt. Thickness - Lat Cross section.")
-    for idx, tau in enumerate(AOT_tau):
-      AOT_page = AOT_url_prefix.replace('chem2d_mission', 'custom_mission')
-      AOT_page =  AOT_page + 'tau=' + tau + AOT_url_suffix + '&field=du_n1'
-      AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
+      #Get AOT latitudinal cross section image
+      print("... Downloading images from GEOS - Aerosol Opt. Thickness - Lat Cross section.")
+      for idx, tau in enumerate(AOT_tau):
+        AOT_page = AOT_url_prefix.replace('chem2d_mission', 'custom_mission')
+        AOT_page =  AOT_page + 'tau=' + tau + AOT_url_suffix + '&field=du_n1'
+        AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
-      dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_latcs_files[idx]))
-      count_good_links += dl
-      count_bad_links += (1 - dl)
-      status.append(dl)
+        dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_latcs_files[idx]))
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
 
     #Get 700 mb wind with geopotential heights
     print("... Downloading images from GEOS - 700 mb wind and Geopotential heights.")
