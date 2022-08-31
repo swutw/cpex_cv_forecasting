@@ -100,7 +100,7 @@ As you add each new link, the empty figure should be replaced with what it is be
 
 1. The script stuck at downloading ICAP_aerosol. What should I do?
 - Always Check if the products exist on the source website first!
-- ICAP_aerosol sometimes don't run and produce figures, so you may want to (1) set "icap_aerosol_ensemble = False" in _switches_download.txt_ (2) use ASKOK forecasting as a replacement.
+- ICAP_aerosol sometimes don't run and produce figures, so you may want to (1) set "icap_aerosol_ensemble = False" in _switches_download.txt_ (2) use ASKOS forecasting as a replacement.
 
 
 2. The joint precipitation animations are not created. What should I do?
