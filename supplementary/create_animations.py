@@ -17,7 +17,8 @@ Required packages: os, subprocess, time.
 NOTE: Read through the True/False switches at the top of the script to make sure the ones you want are selected.
 
 Updates:
- -
+ - 2022-08-20: Add ECWMF 700 & 850 mb outlook
+ - 2022-08-27: Adopt to all operating systems
 """
 
 

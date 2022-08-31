@@ -1,18 +1,24 @@
 """
 Author: Ajda Savarin
-Created: July 20th 2021
+Created: July 04th 2020
 University of Washington
 asavarin@uw.edu
 
-This program is used to check if an archive folder for yesterday has already been created.
+Author: Shun-Nan Wu
+Modified: July 01 2022
+University of Oklahoma
+swu@ou.edu
 
-If yes, it does not do anything (it won't overwrite an archive).
+This program is used to retrieve images for the CPEX-AW and CPEX-CV field campaign forecasting template.
 
-If no, it will move all images from ./figs_final/ to the archive folder, then remove the images in ./figs/, ./figs_cropped/, and ./figs_final.
+Required packages: os, subprocess, time.
 
-Required packages: os, datetime.
 
+Updates:
+ - 2022-08-27: Adopt to all operating systems
 """
+
+
 from datetime import datetime, timedelta
 import os
 
