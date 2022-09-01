@@ -16,9 +16,9 @@ To run the scripts in this directory, you will need to following:
     - time
 3. Microsoft Powerpoint.
 
-
-Google Drive document with links and resources: https://docs.google.com/document/d/1fbgHyg7smXdD6AVZyczOzl1UvFjeB5TxeZdQ1_8xoxE/edit?usp=sharing
-
+- Google Drive document with links and resources: https://docs.google.com/document/d/1fbgHyg7smXdD6AVZyczOzl1UvFjeB5TxeZdQ1_8xoxE/edit?usp=sharing
+- Google Drive link:  https://drive.google.com/drive/folders/14g2MU2wh6fWceYqPDgEeQqtZ734wW_zm?usp=sharing
+- Zoom Meeting: https://uwmadison.zoom.us/j/96904936558?pwd=SFh2aHFKR3FHcGVxaVVnbnFQYzZ3dz09
 
 -------------------------------------------
 # Steps for automatically downloading the figures
@@ -40,7 +40,7 @@ These should be run from the main directory.
 1. Archive previous day's images: **python ./supplementary/archive_yesterdays_images.py**
 
 This will take all the images from _./figs_final/_ and move them into a new directory, if they are not already saved.
-It will then remove all the images from -./figs/_, _./figs_cropped/_, and _./figs_final/_.
+It will then remove all the images from _./figs/_, _./figs_cropped/_, and _./figs_final/_.
 
 2. Download updated images for the forecast: **python ./supplementary/download_daily_images_master.py**
 
