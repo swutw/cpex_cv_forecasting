@@ -26,6 +26,5 @@ uutah_precipitation = True
 uutah_precipitation_animation = True
 ucdavis_precipitation_animation = True
 
-
-icap_aerosol_ensemble = False
 UTAH_website = False
+icap_aerosol_ensemble = False

@@ -594,7 +594,7 @@ if downloadImages:
     if model_day1:
       print("... Downloading UofDavis model precipitation map - animation - for model day 1.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today_m.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2)+'hr.d02.png'
+        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today_m.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2+36+1)+'hr.d02.png'
         dl = downloadLink(url, os.path.join(saveDir,'ucdavis_precip_day1_anim_' + '{:02d}'.format(frame) + '.png'))
         count_good_links += dl
         count_bad_links += (1 - dl)
@@ -603,7 +603,7 @@ if downloadImages:
     if model_day2:
       print("... Downloading UofDavis model precipitation map - animation - for model day 2.")
       for frame in range(nFrames_uwincm):
-        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today_m.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2+24)+'hr.d02.png'
+        url = 'https://orca.atmos.washington.edu/model_images/atl/ucdavis/realtime/' + today_m.strftime('%Y%m%d') + '00/gfs/storm/rr_slp/SLP_Rainrate_' +  today_m.strftime('%Y%m%d') +'12_fcst_'+"{:02d}".format(frame*2+60+1)+'hr.d02.png'
         dl = downloadLink(url, os.path.join(saveDir,'ucdavis_precip_day2_anim_' + '{:02d}'.format(frame) + '.png'))
         count_good_links += dl
         count_bad_links += (1 - dl)
