@@ -27,8 +27,8 @@ if change_work_dir:
   print(" ")
   print(" ")
   print("... Changing working directory to CPEX forecast template.")
-  cmd = ['cd', cwd]
-  subprocess.call(cmd)
+  cmd = ['cd ' + cwd]
+  os.system(' '.join(cmd))
 
 
 if run_archive:
@@ -36,17 +36,17 @@ if run_archive:
   print(" ")
   print(" ")
   print("... Archiving yesterday's imagery.")
-  cmd = ['python', os.path.join(cwd,'supplementary','archive_yesterdays_images.py')]
-  subprocess.call(cmd)
+  cmd = ['python ' + os.path.join(cwd,'supplementary','archive_yesterdays_images.py')]
+  os.system(' '.join(cmd))
 
 
 if run_download:
   print(" ")
   print(" ")
   print(" ")
-  print("... Running download_daily_images_master.py")
-  cmd = ['python', os.path.join(cwd,'supplementary','download_daily_images_master.py')]
-  subprocess.call(cmd)
+  print("... Running download_daily_images_all.py")
+  cmd = ['python ' + os.path.join(cwd,'supplementary','download_daily_images_all.py')]
+  os.system(' '.join(cmd))
 
 
 if run_animations:
@@ -54,8 +54,8 @@ if run_animations:
   print(" ")
   print(" ")
   print("... Running create_animations.py")
-  cmd = ['python', os.path.join(cwd,'supplementary','create_animations.py')]
-  subprocess.call(cmd)
+  cmd = ['python ' + os.path.join(cwd,'supplementary','create_animations.py')]
+  os.system(' '.join(cmd))
 
 
 if run_processing:
@@ -63,5 +63,5 @@ if run_processing:
   print(" ")
   print(" ")
   print("... Running crop_edit_daily_images.py")
-  cmd = ['python', os.path.join(cwd,'supplementary','crop_edit_daily_images.py')]
-  subprocess.call(cmd)
+  cmd = ['python ' + os.path.join(cwd,'supplementary','crop_edit_daily_images.py')]
+  os.system(' '.join(cmd))

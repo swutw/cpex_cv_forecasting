@@ -26,6 +26,7 @@ Updates:
  - 2022-07-08: ECMWF, GFS, and ICON Global forecasting models
  - 2022-08-15: ECMWF 5 days outlook
  - 2022-08-26: Adopt to all operating systems
+ - 2022-09-01: Askos dust download
 """
 
 
@@ -82,14 +83,7 @@ wanted_files = [line.rstrip() for line in wanted_files]
 fl.close()
 
 cmd = ['cp', os.path.join(forecastDir,'logo_cpexcv.png'), os.path.join(saveDir,'.')]
-subprocess.call(cmd)
-
-#all_files = [fl for fl in os.listdir(saveDir)]
-
-#need_to_download = [fl for fl in all_files if fl in wanted_files]
-
-
-
+os.system(' '.join(cmd))
 
 
 def downloadLink(imageUrl, imageName):
@@ -188,8 +182,8 @@ if downloadImages:
 
     if dl:
       print('    ... Converting .gif image to .png image.')
-      cmd = ['convert',  '-coalesce', os.path.join(saveDir,'NHC_surface_analysis.gif'), os.path.join(saveDir,'NHC_surface_analysis.png')]
-      subprocess.call(cmd)
+      cmd = ['convert -coalesce ' + os.path.join(saveDir,'NHC_surface_analysis.gif') + ' ' + os.path.join(saveDir,'NHC_surface_analysis.png')]
+      os.system(cmd[0])
 
     print('... Downloading NHC tropical weather 2-day outlook.')
 
@@ -223,8 +217,8 @@ if downloadImages:
     print('    ... Converting .gif animation to .png sequence of images.')
 
     if dl:
-      cmd = ['convert',  '-coalesce', os.path.join(saveDir,'MIMIC-TPW_24h_animation.gif'), os.path.join(saveDir,'MIMIC-TPW_24h_animation.png')]
-      subprocess.call(cmd)
+      cmd = ['convert -coalesce ' + os.path.join(saveDir,'MIMIC-TPW_24h_animation.gif') + ' ' + os.path.join(saveDir,'MIMIC-TPW_24h_animation.png')]
+      os.system(cmd[0])
 
       print('    ... Finding the latest image and setting it to _latest.')
       fls = [fl for fl in os.listdir(saveDir) if 'MIMIC-TPW' in fl and '.png' in fl]
@@ -232,7 +226,7 @@ if downloadImages:
       frame_number = [int(fl.split('-')[-1][:-4]) for fl in fls]
       latest_frame = fls[0][:24] + str(max(frame_number)) + '.png'
       cmd = ['cp', os.path.join(saveDir,latest_frame), os.path.join(saveDir,'MIMIC-TPW_latest.png')]
-      subprocess.call(cmd)
+      os.system(' '.join(cmd))
 
     write_switch('mimic_tpw', status, fl_switch)
 
@@ -672,7 +666,7 @@ if downloadImages:
 
     var = ['z700_vort','z850_vort']#,'mslp_pcpn']
     for vv in var:
-      print('... Downloading ECMWF -',vv)
+      print('... Downloading ECMWF from tropical tidbits-',vv)
       for idx, tau in enumerate(ECMWF_files):
         status = []
     # -----  00Z initialization simulations
@@ -699,6 +693,7 @@ if downloadImages:
 
     #=== Aerosol optical thickness config
     AOT_tau = ['012', '036', '060'] #Change tau to choose different lead hour
+    AOT_tau_TOD = ['012', '036', '060','084', '108']
 
     AOT_url_prefix = 'https://fluid.nccs.nasa.gov/missions/chem2d_mission%2BPRDUST/?one_click=1&'
     AOT_url_suffix = '&stream=G5FPFC&level=0&region=prdust&fcst=' + fInitialTime
@@ -709,7 +704,9 @@ if downloadImages:
 
     AOT_img_total_files = ['GEOS_total_aot.png',
                            'GEOS_total_aot_day1.png',
-                           'GEOS_total_aot_day2.png']
+                           'GEOS_total_aot_day2.png',
+                           'GEOS_total_aot_day3.png',
+                           'GEOS_total_aot_day4.png']
 
     AOT_img_lowcf_files = ['GEOS_lowCloudFraction.png',
                            'GEOS_lowCloudFraction_day1.png',
@@ -735,7 +732,7 @@ if downloadImages:
 
     #=== 700mb wind & geopotential height config
     #wind_700mb_tau = ['072', '078', '084', '090', '096', '102', '108', '114', '120', '126', '132', '138']
-    wind_700mb_tau = ['084', '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', ]
+    wind_700mb_tau = ['084', '090', '096', '102', '108', '114', '120']
 
     wind_700mb_files = ['GEOS_700mb_outlook_anim_00.png',
                         'GEOS_700mb_outlook_anim_01.png',
@@ -743,12 +740,7 @@ if downloadImages:
                         'GEOS_700mb_outlook_anim_03.png',
                         'GEOS_700mb_outlook_anim_04.png',
                         'GEOS_700mb_outlook_anim_05.png',
-                        'GEOS_700mb_outlook_anim_06.png',
-                        'GEOS_700mb_outlook_anim_07.png',
-                        'GEOS_700mb_outlook_anim_08.png',
-                        'GEOS_700mb_outlook_anim_09.png',
-                        'GEOS_700mb_outlook_anim_10.png',
-                        'GEOS_700mb_outlook_anim_11.png']
+                        'GEOS_700mb_outlook_anim_06.png']
 
 
     def find_geos_img_url(webpage,text_pattern,timeout):
@@ -779,9 +771,7 @@ if downloadImages:
 
     for idx, tau in enumerate(AOT_tau):
       AOT_page = AOT_url_prefix + 'tau=' + tau + AOT_url_suffix + '&field=duaot'
-      #print(AOT_page)
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
-      #print(AOT_img_url)
 
       dl = downloadLink(AOT_img_url, os.path.join(saveDir,AOT_img_2D_files[idx]))
       count_good_links += dl
@@ -791,7 +781,7 @@ if downloadImages:
     #Get AOT total image
     print("... Downloading images from GEOS - Aerosol Opt. Thickness - Total.")
 
-    for idx, tau in enumerate(AOT_tau):
+    for idx, tau in enumerate(AOT_tau_TOD):
       AOT_page = AOT_url_prefix + 'tau=' + tau + AOT_url_suffix + '&field=totaot'
       AOT_img_url = find_geos_img_url(AOT_page, img_url_pattern, req_timeout)
 
@@ -870,6 +860,7 @@ if downloadImages:
         count_bad_links += (1 - dl)
         status.append(dl)
 
+
     #Get 700 mb wind with geopotential heights
     print("... Downloading images from GEOS - 700 mb wind and Geopotential heights.")
     for idx, tau in enumerate(wind_700mb_tau):
@@ -885,6 +876,7 @@ if downloadImages:
 
 
     write_switch('nasa_geos', status, fl_switch)
+
 
   #Write False to switches_process.txt
   for s_dl in switches:

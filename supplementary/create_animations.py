@@ -70,9 +70,8 @@ def persistLastImage(fileDir, imageNameRoot, nDup=3):
     working = True
     frame_num = [int(el[-6:-4]) for el in fls]
     for fl in range(nDup):
-      cmd = ['cp', os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1])+fls[-1][-4:]), os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1]+fl+1)+fls[-1][-4:]) ]
-
-      subprocess.call(cmd)
+      cmd = ['cp ', os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1])+fls[-1][-4:]), os.path.join(fileDir,imageNameRoot+'{:02d}'.format(frame_num[-1]+fl+1)+fls[-1][-4:]) ]
+      os.system(' '.join(cmd))
   else:
     working = False
 
@@ -92,8 +91,8 @@ def createAnimation(fileDir, imageNameRoot, outName, delay=50, loop=0):
   - delay: delay in ms
   - loop: 0 means repeating
   """
-  cmd = ['convert', '-delay', str(delay), os.path.join(fileDir,imageNameRoot+'*'), '-loop', str(loop), '+repage', os.path.join(fileDir,outName) ]
-  subprocess.call(cmd)
+  cmd = ['convert ', '-delay', str(delay), os.path.join(fileDir,imageNameRoot+'*'), '-loop', str(loop), '+repage', os.path.join(fileDir,outName) ]
+  os.system(' '.join(cmd))
 
   return
 
@@ -223,7 +222,7 @@ if createAnimations:
         animationSteps(saveDir, 'uwincm_boundaryLayer_day2_anim_', 'uwincm_boundaryLayer_day2_movie.gif')
 
 
-  if switches['uutah_precipitation_animation']:
+  if switches['uutah_precipitation_animation'] or switches['UTAH_website']:
     current_fls = [fl for fl in present_files_animation if 'uutah_precip_day1_anim_' in fl]
     if len(current_fls) == 12:
       if model_day1:
@@ -240,7 +239,7 @@ if createAnimations:
   if switches['nasa_geos']:
     print('... NASA GEOS 700mb winds')
     current_fls = [fl for fl in present_files_animation if 'GEOS_700mb_outlook_anim_' in fl]
-    if len(current_fls) == 12:
+    if len(current_fls) == 7:
       animationSteps(saveDir, 'GEOS_700mb_outlook_anim_', 'GEOS_700mb_outlook_movie.gif')
 
 
