@@ -32,7 +32,7 @@ import time
 clearDirectory = False # remove existing files
 readSwitches = True
 processImages = True
-joinSlideAnimations = False
+joinSlideAnimations = True
 moveFinalImages = True
 
 model_day1 = model_day2 = True

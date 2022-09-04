@@ -320,7 +320,7 @@ if downloadImages:
   if switches['uwincm_clouds_current']:
     print("... Downloading UWINCM cloud maps at forecast making time (08Z on current day).")
     status = []
-    url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + yesterday.strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  today.strftime('%Y%m%d') + '08.jpg'
+    url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + (yesterday- timedelta(days=1)).strftime('%Y%m%d') + '00/ecmwf/storm/pw_olr/pw_olr.storm.' +  today.strftime('%Y%m%d') + '10.jpg'
     dl = downloadLink(url, os.path.join(saveDir,'uwincm_clouds_current.jpg'))
     count_good_links += dl
     count_bad_links += (1 - dl)
@@ -389,26 +389,6 @@ if downloadImages:
 
     write_switch('uwincm_clouds', status, fl_switch)
 
-  if switches['uwincm_precipitation']:
-    status = []
-    if model_day1:
-      print("... Downloading UWINCM precipitation map - single - for model day 1.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day1.jpg'))
-      count_good_links += dl
-      count_bad_links += (1 - dl)
-      status.append(dl)
-
-    if model_day2:
-      print("... Downloading UWINCM precipitation map - single - for model day 2.")
-      url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
-      dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day2.jpg'))
-      count_good_links += dl
-      count_bad_links += (1 - dl)
-      status.append(dl)
-
-    write_switch('uwincm_precipitation', status, fl_switch)
-
   if switches['uwincm_boundaryLayer']:
     status = []
     if model_day1:
@@ -428,6 +408,26 @@ if downloadImages:
       status.append(dl)
 
     write_switch('uwincm_boundaryLayer', status, fl_switch)
+
+    if switches['uwincm_precipitation']:
+      status = []
+      if model_day1:
+        print("... Downloading UWINCM precipitation map - single - for model day 1.")
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day1.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day1.jpg'))
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+
+      if model_day2:
+        print("... Downloading UWINCM precipitation map - single - for model day 2.")
+        url = 'https://orca.atmos.washington.edu/model_images/atl/umcm_wmh/realtime/' + today_m.strftime('%Y%m%d') + '00/ecmwf/storm/rr_slp/rainr.storm.' +  forecast_day2.strftime('%Y%m%d') + '{:02d}'.format(still_image_forecast_hr) + '.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'uwincm_precip_day2.jpg'))
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+
+      write_switch('uwincm_precipitation', status, fl_switch)
 
   if switches['uutah_precipitation']:
     status = []
