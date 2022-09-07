@@ -31,7 +31,7 @@ from PIL import Image
 readSwitches = True
 createAnimations = True
 
-model_day1 = model_day2 = False
+model_day1 = model_day2 = True
 
 
 
@@ -234,6 +234,21 @@ if createAnimations:
       if model_day2:
         print('... UofUtah precipitation - model day 2')
         animationSteps(saveDir, 'uutah_precip_day2_anim_', 'uutah_precip_day2_movie.gif')
+
+
+  if switches['ucdavis_precipitation_animation']:
+    current_fls = [fl for fl in present_files_animation if 'ucdavis_precip_day1_anim_' in fl]
+    if len(current_fls) == 12:
+      if model_day1:
+        print('... UofDavis precipitation - model day 1')
+        animationSteps(saveDir, 'ucdavis_precip_day1_anim_', 'ucdavis_precip_day1_movie.gif')
+
+    current_fls = [fl for fl in present_files_animation if 'ucdavis_precip_day2_anim_' in fl]
+    if len(current_fls) == 12:
+      if model_day2:
+        print('... UofDavis precipitation - model day 2')
+        animationSteps(saveDir, 'ucdavis_precip_day2_anim_', 'ucdavis_precip_day2_movie.gif')
+
 
 
   if switches['nasa_geos']:

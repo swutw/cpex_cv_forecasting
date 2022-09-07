@@ -478,6 +478,20 @@ if processImages:
       os.system(' '.join(cmd))
 
 
+  if switches['ucdavis_precipitation_animation']:
+    print('   ... Unversity of UCDavis - precipitation - cropping image and adding Sal location.')
+    current_files = sorted([el for el in all_files if 'ucdavis_precip' in el])
+
+    marker_radius = 5
+    for fl in current_files:
+      #cmd = ['convert', os.path.join(saveDir,fl), '-crop', '800x500+0+0', '+repage', os.path.join(cropDir,fl)]
+      cmd = ['cp', os.path.join(saveDir,fl), os.path.join(cropDir,fl)]
+      os.system(' '.join(cmd))
+
+      xPt, yPt = 422, 163
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'black', '-stroke', 'red', '-draw', '\''+'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius) + '\'', os.path.join(cropDir,fl)]
+      os.system(' '.join(cmd))
+
 
   if switches['uwincm_surfaceWind'] or switches['uwincm_surfaceWind_animation']:
     print('   ... UWIN-CM - surface winds - cropping image and adding Sal locations.')
@@ -745,6 +759,37 @@ if joinSlideAnimations:
       print('... UWINCM precipitation and U of Utah precipitation - model day 2.')
       fls_left = sorted([el for el in os.listdir(cropDir) if 'uwincm_precip_day2_anim' in el])
       fls_right = sorted([el for el in os.listdir(cropDir) if 'uutah_precip_day2_anim' in el])
+      if len(fls_left) <= len(fls_right):
+        for num, fl in enumerate(fls_left):
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg')]
+          os.system(' '.join(cmd))
+      else:
+        print('... ... The numbers of images for fields do not match.')
+
+
+      animationSteps(cropDir, 'uwincm_joint_precip_day2_anim_', 'uwincm_joint_precip_day2_movie.gif')
+
+
+  if switches['uwincm_precipitation_animation'] and switches['ucdavis_precipitation_animation'] and switches['uutah_precipitation_animation']==False:
+
+    if model_day1:
+      print('... UWINCM precipitation and U of Davis precipitation - model day 1.')
+      fls_left = sorted([el for el in os.listdir(cropDir) if 'uwincm_precip_day1_anim' in el])
+      fls_right = sorted([el for el in os.listdir(cropDir) if 'ucdavis_precip_day1_anim' in el])
+      if len(fls_left) <= len(fls_right):
+        for num, fl in enumerate(fls_left):
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_precip_day1_anim_' + '{:02d}'.format(num) + '.jpg')]
+          os.system(' '.join(cmd))
+      else:
+        print('... ... The numbers of images for fields do not match.')
+
+
+      animationSteps(cropDir, 'uwincm_joint_precip_day1_anim_', 'uwincm_joint_precip_day1_movie.gif')
+
+    if model_day2:
+      print('... UWINCM precipitation and U of Davis precipitation - model day 2.')
+      fls_left = sorted([el for el in os.listdir(cropDir) if 'uwincm_precip_day2_anim' in el])
+      fls_right = sorted([el for el in os.listdir(cropDir) if 'ucdavis_precip_day2_anim' in el])
       if len(fls_left) <= len(fls_right):
         for num, fl in enumerate(fls_left):
           cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'uwincm_joint_precip_day2_anim_' + '{:02d}'.format(num) + '.jpg')]
