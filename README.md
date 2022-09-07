@@ -9,7 +9,7 @@ To run the scripts in this directory, you will need to following:
     - bs4 (HTML parsing; if python yells at you about "Couldn't find a tree builder ", you may have to conda/pip install lxml)
     - datetime (dealing with dates)
     - numpy (number stuff)
-    - Image (Create gif files)
+    - PIL (Create gif files)
     - os (reading existing files)
     - subprocess (executing code outside python)
     - urllib (retrieving images)
