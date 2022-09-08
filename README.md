@@ -76,7 +76,6 @@ Make sure you have downloaded image files and cropped them before starting this.
 - Under **Shape Options**, click on **Fill and Line** tab (the one that looks like a paint bucket).
 - Under the **Fill section**, make sure *Picture or texture fill* is chosen, and click on the **Insert ...**. button under *Picture source*. This will open a window where you can search for the image you want to link to.
 - Find the image you want to link (the number at the beginning of the file name is the slide page you should insert them) and highlight it. All images for the ppt are stored in **/figs_final/**.
-- Click on the **Options** button in the bottom left corner (this might vary), and tick both the **Link to File**, and the **Save with Document** boxes.
 - Click **Insert**.
 
 As you add each new link, the empty figure should be replaced with what it is being linked to. As you go through the file, you will see the file size increase (from <500KB to >60MB).
