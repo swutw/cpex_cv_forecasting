@@ -15,7 +15,9 @@ import subprocess
 
 
 #os_system='Windows'
+#os_system='Linux'
 os_system='Mac'
+
 change_work_dir=True
 run_archive=True
 run_download=True
@@ -47,7 +49,7 @@ if run_download:
   print(" ")
   print(" ")
   print("... Running download_daily_images_all.py")
-  if os_system=='Mac': cmd = ['python ' + os.path.join(cwd,'supplementary','download_daily_images_all.py')]
+  if os_system=='Mac' or os_system=='Linux': cmd = ['python ' + os.path.join(cwd,'supplementary','download_daily_images_all.py')]
   if os_system=='Windows': cmd = ['python ' + os.path.join(cwd,'supplementary','download_daily_images_all_windows.py')]
   os.system(' '.join(cmd))
 
@@ -57,7 +59,7 @@ if run_animations:
   print(" ")
   print(" ")
   print("... Running create_animations.py")
-  if os_system=='Mac': cmd = ['python ' + os.path.join(cwd,'supplementary','create_animations.py')]
+  if os_system=='Mac' or os_system=='Linux': cmd = ['python ' + os.path.join(cwd,'supplementary','create_animations.py')]
   if os_system=='Windows': cmd = ['python ' + os.path.join(cwd,'supplementary','create_animations_windows.py')]
   os.system(' '.join(cmd))
 
@@ -67,6 +69,6 @@ if run_processing:
   print(" ")
   print(" ")
   print("... Running crop_edit_daily_images.py")
-  if os_system=='Mac': cmd = ['python ' + os.path.join(cwd,'supplementary','crop_edit_daily_images.py')]
+  if os_system=='Mac' or os_system=='Linux': cmd = ['python ' + os.path.join(cwd,'supplementary','crop_edit_daily_images.py')]
   if os_system=='Windows': cmd = ['python ' + os.path.join(cwd,'supplementary','crop_edit_daily_images_windows.py')]
   os.system(' '.join(cmd))
