@@ -628,6 +628,27 @@ if downloadImages:
 
       write_switch('UTAH_website', status, fl_switch)
 
+
+  if switches['mpas_outlook']:
+    vv=['pw_olr','rainr']
+    status = []
+    for var in vv:
+      print("... Downloading MPAS model " + var + " map.")
+      for frame in range(12): #57
+        url = 'https://www2.mmm.ucar.edu/projects/real-time-forecasts/img/' + today_m.strftime('%Y%m%d') + '12/UW/cpex_aw.' + var + '.westafrica.init' + today_m.strftime('%Y%m%d') + '12.fcst' + "{:03d}".format(frame*2+84+1) + 'hr.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'mpas_' + var + '_day3_anim_' + '{:02d}'.format(frame) + '.png'))
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+      for frame in range(6):
+        url = 'https://www2.mmm.ucar.edu/projects/real-time-forecasts/img/' + today_m.strftime('%Y%m%d') + '12/UW/cpex_aw.' + var + '.westafrica.init' + today_m.strftime('%Y%m%d') + '12.fcst' + "{:03d}".format(frame*2+108+1) + 'hr.jpg'
+        dl = downloadLink(url, os.path.join(saveDir,'mpas_' + var + '_day4_anim_' + '{:02d}'.format(frame) + '.png'))
+        count_good_links += dl
+        count_bad_links += (1 - dl)
+        status.append(dl)
+
+    write_switch('mpas_outlook', status, fl_switch)
+
   # NOW BACK TO OBSERVATIONS - ICAP
   if switches['icap_aerosol_ensemble']:
     print("... Downloading ICAP AOT ensemble mean maps for day 3.")

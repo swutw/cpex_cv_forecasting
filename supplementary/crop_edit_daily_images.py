@@ -566,6 +566,33 @@ if processImages:
       os.system(' '.join(cmd))
 
 
+  if switches['mpas_outlook']:
+    print('   ... MPAS outlook - cropping image and adding Sal locations.')
+    current_files = sorted([el for el in all_files if 'mpas_rainr' in el])
+
+    marker_radius = 4
+    for fl in current_files:
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '780x400+0+115', '+repage', os.path.join(cropDir,fl)]
+      os.system(' '.join(cmd))
+
+      xPt, yPt = 402, 98
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', '\''+'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius) + '\'', os.path.join(cropDir,fl)]
+      os.system(' '.join(cmd))
+
+
+    current_files = sorted([el for el in all_files if 'mpas_pw_olr' in el])
+
+    marker_radius = 4
+    for fl in current_files:
+      #cmd = ['convert', os.path.join(saveDir,fl), '-crop', '825x530+80+85', '+repage', os.path.join(cropDir,fl)]
+      cmd = ['convert', os.path.join(saveDir,fl), '-crop', '780x400+0+115', '+repage', os.path.join(cropDir,fl)]
+      os.system(' '.join(cmd))
+
+      xPt, yPt = 402, 98
+      cmd = ['convert', os.path.join(cropDir,fl), '-fill', 'red', '-stroke', 'black', '-draw', '\''+'circle '+ str(xPt) + ',' + str(yPt) + ' ' + str(xPt+marker_radius) + ',' + str(yPt+marker_radius) + '\'', os.path.join(cropDir,fl)]
+      os.system(' '.join(cmd))
+
+
   if switches['nasa_geos']:
     print('   ... NASA GEOS images - cropping image and adding Sal locations.')
     current_files = sorted([el for el in all_files if 'GEOS_700mb_outlook' in el])
@@ -672,6 +699,22 @@ if joinSlideAnimations:
 
 
       animationSteps(cropDir, 'ECMWF_outlook_day3_anim_', 'ECMWF_outlook_day3.gif')
+
+
+  if switches['mpas_outlook']:
+      print('... MPAS TPW & precipitation')
+      fls_left = sorted([el for el in os.listdir(cropDir) if 'pw_olr' in el])
+      fls_right = sorted([el for el in os.listdir(cropDir) if 'rainr' in el])
+      if len(fls_left) <= len(fls_right):
+        for num, fl in enumerate(fls_left):
+          cmd = ['convert', '+append', os.path.join(cropDir,fl), os.path.join(cropDir,fls_right[num]), os.path.join(cropDir,'MPAS_outlook_day3_anim_' + '{:02d}'.format(num) + '.jpg')]
+          os.system(' '.join(cmd))
+      else:
+        print('... ... The numbers of images for fields do not match.')
+
+
+      animationSteps(cropDir, 'MPAS_outlook_day3_anim_', 'MPAS_outlook_day3.gif')
+
 
   if switches['uwincm_surfaceWind_animation'] and switches['uwincm_650mbRH_animation']:
 
@@ -851,7 +894,8 @@ if moveFinalImages:
                     'GEOS_total_aot_day3.png',
                     'GEOS_total_aot_day4.png',
                     'GEOS_700mb_outlook_movie.gif',
-                    'ECMWF_outlook_day3.gif'
+                    'ECMWF_outlook_day3.gif',
+                    'MPAS_outlook_day3.gif'
                     ]
 
     # additional images, when they become available:
@@ -904,7 +948,8 @@ if moveFinalImages:
                     '16_GEOS_total_aot_day3.png',
                     '16_GEOS_total_aot_day4.png',
                     '17_GEOS_700mb_outlook_movie.gif',
-                    '18_ECMWF_outlook_day3.gif'
+                    '18_ECMWF_outlook_day3.gif',
+                    '19_MPAS_outlook_day3.gif'
                     ]
 
   for fl, fl_r in zip(list_of_images, rename_of_images):

@@ -25,6 +25,7 @@ uwincm_surfaceWind_animation = True
 uutah_precipitation = True
 uutah_precipitation_animation = True
 ucdavis_precipitation_animation = True
+mpas_outlook = True
 
 UTAH_website = False
 icap_aerosol_ensemble = False
