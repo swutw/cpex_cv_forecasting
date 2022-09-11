@@ -1,6 +1,10 @@
 .DS_Store
 ._.DS_Store
 
+*.png
+*.PNG
+*.jpg
+!/logo_cpexcv.png
 
 # GitHub default Python gitignore below
 
